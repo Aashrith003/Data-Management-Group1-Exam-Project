@@ -1,9 +1,11 @@
-"""Seattle Road Safety: reproducible validated data pipeline.
+"""Seattle Road Safety: the main data pipeline.
 
-Adapted from the uploaded shop_pipeline's Load -> Clean -> Validate -> Split
--> Enrich -> Output structure. Run with: python pipeline.py
+Reads the three raw CSV files, cleans and checks them, counts collisions per road
+segment and intersection per year, adds street and traffic details, and writes the
+results to data/output. Run with: python pipeline.py
 
-Raw files are READ-ONLY. No outputs are published until all key checks pass.
+The raw files are only read, never changed. Nothing is written until every
+quality rule in rules.py has passed.
 """
 from __future__ import annotations
 from datetime import datetime, timezone

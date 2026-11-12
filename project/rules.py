@@ -1,8 +1,8 @@
-"""Quality gates for Seattle Road Safety.
+"""Quality rules for the Seattle Road Safety pipeline.
 
-Like the class Chapter 3 rules.py, but expressed with pandas so the starter
-runs without requiring any extra validation framework. Add Pandera schemas
-later if your course requires that specific library.
+Each rule raises QualityGateError when the data is unsafe, which stops the whole
+run before any output is written. Written with plain pandas, so no extra
+validation library is needed.
 """
 from __future__ import annotations
 import pandas as pd

@@ -1,4 +1,4 @@
-"""Rebuild the Chapter 2 raw-column profile as a CSV.
+"""Describe every column of the three raw files and save it as data/output/raw_column_profile.csv.
 Run: python profile.py
 """
 from pathlib import Path

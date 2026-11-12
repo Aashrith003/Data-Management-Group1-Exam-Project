@@ -8,7 +8,7 @@ Course rubric: each dimension receives **0 (missing), 1 (partial), or 2 (good/co
 | Seattle Streets | 2 | 2 | 1 | 1 | **6/8** | Complex GIS codes/units and site-specific reuse/terms require explicit mapping |
 | Traffic Counts by Study | 2 | 2 | 1 | 2 | **7/8** | ADT sampling, code values and some field meanings require careful interpretation |
 
-**Combined headline score for the three sources used together: 6/8 (F 2, A 2, I 1, R 1).** When the datasets are integrated, reuse is limited by the weakest source: Collisions and Streets show no explicit licence, so the combined Reusable score is 1 even though Traffic alone scores 2. This is the score shown on the presentation slide.
+**Combined headline score for the three sources used together: 6/8 (F 2, A 2, I 1, R 1).** When the datasets are integrated, reuse is limited by the weakest source: Collisions and Streets show no explicit licence, so the combined Reusable score is 1 even though Traffic alone scores 2.
 
 ### Why the ratings are not zero
 

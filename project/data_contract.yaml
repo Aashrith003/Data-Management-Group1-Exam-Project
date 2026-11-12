@@ -1271,7 +1271,7 @@ team:
   - username: megha.vardhan
     name: Nukala Megha Sri Sai Vardhan
     role: Quality reviewer
-    description: Independent Tableau/Python comparison, limitations and presentation checks.
+    description: Independent Tableau/Python comparison, limitations and documentation checks.
     dateIn: '2026-11-02'
 roles:
 - role: examiner_read

@@ -10,7 +10,7 @@ Editable records for this chapter are in `documentation/governance/` (`roles_mat
 | Derived data owner | Nagothi Ram Dileep | Approves scope, release conditions, limitations and version |
 | Data steward | Jonnala Bhavya Sri | Data dictionary, quality definitions, scope decisions and issue log |
 | Pipeline custodian | Pulakanti Aashrith Reddy | Unchanged raw copies, Python and Tableau code, tests, hashes and reruns |
-| Quality reviewer | Nukala Megha Sri Sai Vardhan | Independent Tableau/Python comparison, limitations and presentation checks |
+| Quality reviewer | Nukala Megha Sri Sai Vardhan | Independent Tableau/Python comparison, limitations and documentation checks |
 | Consumers | Transportation analysts, road-safety researchers | Use outputs within the documented limitations |
 
 **Upstream roles cannot be transferred to students.** The group's roles cover only the derived product, not the City's source systems.

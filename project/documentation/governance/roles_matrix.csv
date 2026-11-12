@@ -3,5 +3,5 @@ Source publisher,City of Seattle / SDOT,Collect and publish the upstream dataset
 Derived data owner,Nagothi Ram Dileep,"Approve project scope, release conditions, limitations and version",Assigned
 Data steward,Jonnala Bhavya Sri,"Data dictionary, quality definitions, scope decisions and issue log",Assigned
 Pipeline custodian,Pulakanti Aashrith Reddy,"Unchanged raw copies, Python and Tableau code, tests, hashes and reruns",Assigned
-Quality reviewer,Nukala Megha Sri Sai Vardhan,"Independent Tableau/Python comparison, limitations and presentation checks",Assigned
+Quality reviewer,Nukala Megha Sri Sai Vardhan,"Independent Tableau/Python comparison, limitations and documentation checks",Assigned
 Consumers,Transportation analysts and road-safety researchers,Use outputs within the documented limitations,Intended users

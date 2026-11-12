@@ -126,7 +126,7 @@ for t, meta in TABLES.items():
 members = [('ram.dileep', 'Nagothi Ram Dileep', 'Derived data owner', 'Approves scope, release conditions, limitations and version.'),
            ('bhavya.sri', 'Jonnala Bhavya Sri', 'Data steward', 'Data dictionary, quality definitions, scope decisions and issue log.'),
            ('aashrith.reddy', 'Pulakanti Aashrith Reddy', 'Pipeline custodian', 'Unchanged raw copies, Python and Tableau code, tests, hashes and reruns.'),
-           ('megha.vardhan', 'Nukala Megha Sri Sai Vardhan', 'Quality reviewer', 'Independent Tableau/Python comparison, limitations and presentation checks.')]
+           ('megha.vardhan', 'Nukala Megha Sri Sai Vardhan', 'Quality reviewer', 'Independent Tableau/Python comparison, limitations and documentation checks.')]
 
 contract = {
     'apiVersion': 'v3.2.0',

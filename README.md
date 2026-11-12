@@ -1,137 +1,119 @@
-# Seattle Road Safety — From Raw Open Data to a Trustworthy, Reproducible Data Product
+# Seattle Road Safety: from raw open data to a dataset you can trust
 
-**SRH University · Data Management · Group 1**
-Pulakanti Aashrith Reddy · Nukala Megha Sri Sai Vardhan · Jonnala Bhavya Sri · Nagothi Ram Dileep
+SRH University · Data Management · Group 1
 
-This repository contains our data-management examination project. We combine three public City of Seattle datasets (collisions, streets and traffic studies) into curated tables of **recorded collision counts by road segment and intersection, 2019–2025**. The same transformation is built twice, visually in **Tableau Prep** and in a tested **Python** pipeline, and both produce the same results. Every quality problem we found is documented, flagged and kept visible instead of being silently "cleaned".
+This is our data management exam project. We took three public datasets from the City of Seattle (collisions, streets and traffic counts) and turned them into clean tables that show **how many collisions were recorded on each road segment and at each intersection from 2019 to 2025**.
 
-> **Question:** Which Seattle road segments and intersections had the highest *recorded* collision counts in 2019–2025, and which data-quality, integration and coverage limits must be checked before those findings are used in further analysis or AI?
+We did the cleaning twice: once in **Tableau Prep** and once in **Python**. Both give the same results. When we found a problem in the data, we did not hide it or guess a value. We kept it visible and marked it.
+
+> **Our question:** Which Seattle road segments and intersections had the most recorded collisions in 2019–2025, and what problems in the data do people need to know about before they use these numbers?
 >
-> **Answer in one line:** The data supports a reliable ranking of *recorded collision counts*, but **not** traffic-adjusted risk, because only 4.77% of segment-years have a same-year traffic study.
+> **Short answer:** We can rank places by the number of *recorded* collisions. We cannot rank them by risk per vehicle, because only 4.77% of road segment years have a traffic count from the same year.
 
----
+## Our team
+
+| Name | Role | What they looked after |
+| --- | --- | --- |
+| **Nagothi Ram Dileep** | Data owner | Decided the scope, the limits and when a version is ready |
+| **Jonnala Bhavya Sri** | Data steward | The data dictionary, quality rules and the list of known issues |
+| **Pulakanti Aashrith Reddy** | Pipeline custodian | The raw files, the Python and Tableau work, the tests and the checksums |
+| **Nukala Megha Sri Sai Vardhan** | Quality reviewer | Comparing Tableau with Python, the limitations and checking the documentation |
+
+The City of Seattle and its transport department (SDOT) own the original data. We only own what we built from it. More about the roles: [06 Governance – Roles](project/documentation/06_GOVERNANCE_AND_AI.md#roles-srh-university-data-management-group-1).
 
 ## Contents
 
-1. [What is in this folder](#1-what-is-in-this-folder)
-2. [Team and roles](#2-team-and-roles)
-3. [Source data](#3-source-data)
-4. [Architecture](#4-architecture)
-5. [Results](#5-results)
-6. [Data quality findings](#6-data-quality-findings)
-7. [FAIR assessment](#7-fair-assessment)
-8. [Tableau Prep and Python parity](#8-tableau-prep-and-python-parity)
-9. [How to reproduce](#9-how-to-reproduce)
-10. [Data contract (ODCS v3.2.0)](#10-data-contract-odcs-v320)
-11. [Governance and AI readiness](#11-governance-and-ai-readiness)
-12. [Limitations](#12-limitations)
-13. [Licence and attribution](#13-licence-and-attribution)
+1. [What is in this repository](#1-what-is-in-this-repository)
+2. [The data we used](#2-the-data-we-used)
+3. [How the project is built](#3-how-the-project-is-built)
+4. [Results](#4-results)
+5. [Problems we found in the data](#5-problems-we-found-in-the-data)
+6. [FAIR assessment](#6-fair-assessment)
+7. [Tableau and Python give the same results](#7-tableau-and-python-give-the-same-results)
+8. [How to run it yourself](#8-how-to-run-it-yourself)
+9. [Data contract](#9-data-contract)
+10. [Governance and AI readiness](#10-governance-and-ai-readiness)
+11. [Limitations](#11-limitations)
+12. [Licence](#12-licence)
 
----
+## 1. What is in this repository
 
-## 1. What is in this folder
+Click a name to open it, or click the link on the right to read what it does.
 
-```text
-DM_Project_Group1/
-├── README.md                         ← this file
-├── tableau/
-│   ├── Seattle_Road_Safety_Final.tflx   packaged Tableau Prep flow (includes the 3 source CSVs)
-│   └── Seattle_Road_Safety_Final.tfl    editable flow
-└── project/                          ← runnable project: run all commands from here
-    ├── pipeline.py                   Python ETL: load → clean → validate → classify → aggregate → enrich → output
-    ├── rules.py                      quality gates (STOP rules)
-    ├── profile.py                    raw-column profile
-    ├── audit_evidence.py             independent audit + Tableau/Python comparison → evidence/
-    ├── scripts/
-    │   ├── build_data_contract.py    regenerates data_contract.yaml
-    │   └── validate_data_contract.py validates the contract + runs its 49 quality checks
-    ├── tests/                        10 automated tests
-    ├── requirements.txt              pandas
-    ├── requirements-contract.txt     pandas, pyyaml, jsonschema (contract tools only)
-    ├── metadata.json                 Schema.org Dataset metadata
-    ├── data_contract.yaml            data contract (Bitol ODCS v3.2.0)
-    ├── README.md                     detailed data README (fields, units, outputs)
-    ├── data/
-    │   ├── raw/                      3 original CSV snapshots — never modified
-    │   ├── output/                   quality_metrics.json (hashes); the 5 output CSVs are recreated by pipeline.py
-    │   ├── tableau_output/           4 Tableau Prep outputs (for comparison)
-    │   └── quarantine/               rows rejected for unparseable dates (0 in this snapshot)
-    ├── documentation/
-    │   ├── 01_PROJECT_SCOPE_AND_ARCHITECTURE.md
-    │   ├── 02_FAIR_ASSESSMENT.md
-    │   ├── 03_QUALITY_AND_PROFILE.md
-    │   ├── 04_CLEANING_AND_TABLEAU.md
-    │   ├── 05_PYTHON_REPRODUCIBILITY.md
-    │   ├── 06_GOVERNANCE_AND_AI.md
-    │   ├── 07_CLEANING_LOG.csv
-    │   ├── data_dictionary.csv       196 raw + output fields, each with its definition source
-    │   └── governance/               roles, risk register, lineage, AI-readiness checklist, ODCS schema
-    ├── evidence/                     quality KPIs, scorecard, reconciliations, repeat-run proof
-    │   └── profiling/                extended profile: all 117 raw columns, domains, relationships, dates
-    │   └── profiling/                extended profile: all 117 raw columns, domains, relationships, dates
-    └── logs/run_log.jsonl            pipeline run history
-```
-
-## 2. Team and roles
-
-| Member | Role | Responsibilities |
+| Folder or file | What it is | Explained in |
 | --- | --- | --- |
-| Nagothi Ram Dileep | Derived data owner | Approves scope, release conditions, limitations and version |
-| Jonnala Bhavya Sri | Data steward | Data dictionary, quality definitions, scope decisions, issue log |
-| Pulakanti Aashrith Reddy | Pipeline custodian | Raw snapshots, Python and Tableau code, tests, hashes, reruns |
-| Nukala Megha Sri Sai Vardhan | Quality reviewer | Independent Tableau/Python comparison, limitations, documentation checks |
+| [`tableau/`](tableau/) | The Tableau Prep flow. The `.tflx` file also contains the three source files. | [04 Cleaning and Tableau](project/documentation/04_CLEANING_AND_TABLEAU.md) |
+| [`project/pipeline.py`](project/pipeline.py) | The main Python program: reads, cleans, counts and writes the results | [05 Python – pipeline.py](project/documentation/05_PYTHON_REPRODUCIBILITY.md#2-pipelinepy) |
+| [`project/rules.py`](project/rules.py) | The quality rules that stop the run if the data is unsafe | [05 Python – rules.py](project/documentation/05_PYTHON_REPRODUCIBILITY.md#3-rulespy) |
+| [`project/profile.py`](project/profile.py) | Describes every column of the raw files | [05 Python – profile.py](project/documentation/05_PYTHON_REPRODUCIBILITY.md#4-profilepy) |
+| [`project/audit_evidence.py`](project/audit_evidence.py) | Checks the results again and writes the evidence files | [05 Python – audit_evidence.py](project/documentation/05_PYTHON_REPRODUCIBILITY.md#5-audit_evidencepy) |
+| [`project/tests/`](project/tests/) | 10 automated tests | [05 Python – the tests](project/documentation/05_PYTHON_REPRODUCIBILITY.md#7-the-tests) |
+| [`project/scripts/`](project/scripts/) | Tools that create and check the data contract | [06 Governance – data contract](project/documentation/06_GOVERNANCE_AND_AI.md#data-contract) |
+| [`project/data/raw/`](project/data/raw/) | The three original files, never changed | [project README – raw data](project/README.md#the-raw-data-dataraw) |
+| [`project/data/output/`](project/data/output/) | `quality_metrics.json` with all checksums. The output CSVs are made by running `pipeline.py`. | [project README – outputs](project/README.md#the-outputs-dataoutput) |
+| [`project/data/tableau_output/`](project/data/tableau_output/) | The four files Tableau produced, used for the comparison | [04 Cleaning and Tableau](project/documentation/04_CLEANING_AND_TABLEAU.md#verified-comparison-tableau-run-of-7-november-2026) |
+| [`project/evidence/`](project/evidence/) | Quality checks, the Tableau-vs-Python comparison and proof that runs repeat exactly | [05 Python – evidence files](project/documentation/05_PYTHON_REPRODUCIBILITY.md#5-audit_evidencepy) |
+| [`project/documentation/`](project/documentation/) | One detailed write-up for each part of the project | see the links in each section below |
+| [`project/documentation/data_dictionary.csv`](project/documentation/data_dictionary.csv) | Meaning, unit and source of all 196 fields | [project README – important fields](project/README.md#important-fields) |
+| [`project/metadata.json`](project/metadata.json) | A description of the dataset in the Schema.org format | [02 FAIR](project/documentation/02_FAIR_ASSESSMENT.md) |
+| [`project/data_contract.yaml`](project/data_contract.yaml) | Our data contract, with 49 checks | [06 Governance – data contract](project/documentation/06_GOVERNANCE_AND_AI.md#data-contract) |
+| [`project/README.md`](project/README.md) | A longer guide to the data, the fields and the outputs | – |
 
-The City of Seattle / SDOT remains the owner of the source data; the group owns only the derived product.
+## 2. The data we used
 
-## 3. Source data
+We downloaded all three files on **2 November 2026**. They are in [`project/data/raw/`](project/data/raw/) and we never changed them. Their checksums are in [`quality_metrics.json`](project/data/output/quality_metrics.json), so anyone can check that they have exactly the same files.
 
-All three files were downloaded on **2 November 2026** and are kept unchanged in `project/data/raw/`. Their SHA-256 hashes are in `project/data/output/quality_metrics.json`.
-
-| Dataset | File | Rows | Key | Licence shown by the portal (checked 7 Nov 2026) |
+| Dataset | File | Rows | ID column | Licence |
 | --- | --- | ---: | --- | --- |
-| [SDOT Collisions All Years](https://data-seattlecitygis.opendata.arcgis.com/datasets/SeattleCityGIS::sdot-collisions-all-years) | `CRASHES_2019_2025.csv` | 53,936 | `INCKEY` | None displayed |
-| [Seattle Streets](https://data.seattle.gov/dataset/Seattle-Streets/w3hh-bqt5) | `Seattle_Streets_1_7907262242317696645.csv` | 23,888 | `COMPKEY` | None; no-warranty disclaimer only |
+| [SDOT Collisions All Years](https://data-seattlecitygis.opendata.arcgis.com/datasets/SeattleCityGIS::sdot-collisions-all-years) | `CRASHES_2019_2025.csv` | 53,936 | `INCKEY` | none shown |
+| [Seattle Streets](https://data.seattle.gov/dataset/Seattle-Streets/w3hh-bqt5) | `Seattle_Streets_1_7907262242317696645.csv` | 23,888 | `COMPKEY` | none shown, only a disclaimer |
 | [Traffic Counts by Study](https://data.seattle.gov/Transportation/Traffic-Counts-by-Study/xucb-vzhc) | `Traffic_Counts_by_Study_20261101.csv` | 64,532 | `STUDY_ID` | Public Domain |
 
-Field definitions come from SDOT's documentation ([Collisions](https://www.seattle.gov/Documents/Departments/SDOT/GIS/Collisions_OD.pdf), [Streets](https://www.seattle.gov/Documents/Departments/SDOT/GIS/Seattle_Streets_OD.pdf)): `SEGLENGTH` is in feet and `SPEEDLIMIT` in miles per hour. The live portals are refreshed regularly, so their current row counts differ from these snapshots.
+A **road segment** is one piece of street between two intersections. Each collision is linked either to a road segment or to an intersection. What every column means, and its unit (for example, segment length is in feet and the speed limit in miles per hour), is explained in [project README – important fields](project/README.md#important-fields) and in the full [data dictionary](project/documentation/data_dictionary.csv).
 
-## 4. Architecture
+The City updates these datasets regularly, so a download made today will have different row counts.
+
+More detail: [01 Scope – original snapshots](project/documentation/01_PROJECT_SCOPE_AND_ARCHITECTURE.md#original-snapshots-never-edited).
+
+## 3. How the project is built
 
 ```text
-Seattle open-data portals
-   → raw zone: data/raw (unchanged CSVs + SHA-256)
-   → profiling and quality checks (audit_evidence.py)
-   → two independent ETL implementations
-        ├── Tableau Prep flow  → data/tableau_output
-        └── Python pipeline    → data/output (authoritative)
-   → reconciliation (evidence/08, 09)
-   → curated count tables → analysts
+City of Seattle open data
+   → data/raw            the three files, unchanged, with checksums
+   → quality checks      audit_evidence.py
+   → cleaning, done twice
+        ├── Tableau Prep → data/tableau_output
+        └── Python       → data/output   (the main result)
+   → comparison          evidence/08 and 09
+   → count tables for analysts
 ```
 
-This is a local, file-based batch ETL organised like raw / curated / audit zones. It is **not** a cloud data lake, warehouse or deployed AI system.
+Everything runs on local files. There is no cloud database, data warehouse or AI model.
 
-**Join logic (and why it matters):**
-- Segment crashes (`ADDRTYPE = B`): `ADDR_SEGINTKEY` → Streets `COMPKEY`; traffic studies are filtered and aggregated per road and year **before** joining on `COMPKEY + year`.
-- Intersection crashes (`ADDRTYPE = I`): `INTKEY` → a union of the Streets low and high endpoints (`INTKEYLO`, `INTKEYHI`), aggregated per intersection **before** joining.
-- Joining raw studies or raw endpoints directly would multiply crash rows. The pipeline stops if any join changes a row count or loses a crash.
+How the three datasets are joined:
+- A collision on a road segment (`ADDRTYPE = B`) is linked to the street through `ADDR_SEGINTKEY` = `COMPKEY`. Traffic counts are first averaged per road and year, and only then added.
+- A collision at an intersection (`ADDRTYPE = I`) is linked through `INTKEY`. Every street segment has two ends, so we first make one summary row per intersection, and only then add it.
+- If we joined before summarising, some collisions would be counted twice. The program checks this after every join and stops if the number of rows changes.
 
-## 5. Results
+More detail: [01 Scope – architecture](project/documentation/01_PROJECT_SCOPE_AND_ARCHITECTURE.md#architecture--data-flow-blueprint) and [05 Python – pipeline.py](project/documentation/05_PYTHON_REPRODUCIBILITY.md#2-pipelinepy).
 
-**Analysis scope** — all 53,936 collisions are kept in `validated_crashes.csv` with a status:
+## 4. Results
+
+All 53,936 collisions are kept in `validated_crashes.csv`, each with a status:
 
 | Status | Collisions |
 | --- | ---: |
-| Included – road segment | 23,774 |
-| Included – intersection | 17,751 |
-| Outside – location not matched by the source | 12,215 |
-| Outside – alley | 196 |
-| **Total** | **53,936** (41,525 included = 76.99%) |
+| On a road segment | 23,774 |
+| At an intersection | 17,751 |
+| Location not matched by SDOT | 12,215 |
+| In an alley | 196 |
+| **Total** | **53,936** (41,525 used in the counts, 76.99%) |
 
-**Recorded collisions per year:** 2019: 11,236 · 2020: 7,254 · 2021: 8,170 · 2022: 7,681 · 2023: 7,369 · 2024: 6,464 · 2025: 5,762
+Collisions recorded per year: 2019: 11,236 · 2020: 7,254 · 2021: 8,170 · 2022: 7,681 · 2023: 7,369 · 2024: 6,464 · 2025: 5,762
 
-**Top recorded-count road segments (2019–2025)**
+**Road segments with the most recorded collisions (2019–2025)**
 
-| Segment key | Street | Collisions | Injuries | Serious injuries |
+| Segment ID | Street | Collisions | Injuries | Serious injuries |
 | ---: | --- | ---: | ---: | ---: |
 | 1270 | 1ST AV S BR NB | 106 | 46 | 0 |
 | 8995 | AURORA AVE N | 66 | 38 | 2 |
@@ -139,9 +121,9 @@ This is a local, file-based batch ETL organised like raw / curated / audit zones
 | 8991 | AURORA AVE N | 59 | 44 | 8 |
 | 1267 | 1ST AV S BR NB | 56 | 26 | 3 |
 
-**Top recorded-count intersections (2019–2025)**
+**Intersections with the most recorded collisions (2019–2025)**
 
-| Intersection key | Location | Collisions | Injuries | Serious injuries |
+| Intersection ID | Location | Collisions | Injuries | Serious injuries |
 | ---: | --- | ---: | ---: | ---: |
 | 30509 | 4TH AVE S AND S JACKSON ST | 79 | 50 | 3 |
 | 29973 | 6TH AVE AND JAMES ST | 57 | 27 | 0 |
@@ -149,90 +131,106 @@ This is a local, file-based batch ETL organised like raw / curated / audit zones
 | 33022 | EAST MARGINAL WAY S AND S DAWSON ST | 46 | 46 | 0 |
 | 36360 | AURORA AVE N AND N NORTHGATE WAY | 44 | 15 | 0 |
 
-These are **recorded counts**, not risk rates: busier roads naturally record more collisions. Segment and intersection counts are different populations and must not be added together.
+These are counts of recorded collisions, not risk. A busy road will record more collisions simply because more cars use it. Segment counts and intersection counts are separate groups and should not be added together.
 
-## 6. Data quality findings
+More detail: [01 Scope – scope](project/documentation/01_PROJECT_SCOPE_AND_ARCHITECTURE.md#scope-reconciliation) and [project README – outputs](project/README.md#the-outputs-dataoutput).
 
-| Dimension | Finding | Handling |
+## 5. Problems we found in the data
+
+| Area | What we found | What we did |
 | --- | --- | --- |
-| Completeness | `WEATHER` missing for 12,350 crashes (22.90%), plus 246 "Unknown" | Kept and flagged (`Weather_Status`); no imputation |
-| Uniqueness | 0 duplicate or missing keys in all three sources | STOP rule if this ever fails |
-| Validity | 0 bad dates, 0 bad injury cells; traffic `ADT` stored as text with thousands separators | Commas removed before parsing |
-| Consistency | 140 zero and 20 missing speed limits; `SEVERITYCODE` contradicts casualty counts in 331 crashes, 13 blank | Flagged for review; source values unchanged |
-| Timeliness / coverage | Only 790 of 16,569 segment-years (4.77%) have a same-year traffic study | No traffic-adjusted risk claims |
-| Accuracy | No independent ground truth available | Internally consistent only; not externally certified |
+| Missing values | Weather is missing for 12,350 collisions (22.90%), and 246 more say "Unknown" | Kept them and marked them; we did not guess the weather |
+| Duplicates | No missing or repeated IDs in any of the three files | The program stops if this ever changes |
+| Format | No unreadable dates or injury counts. Traffic volumes are stored as text with commas, like `9,759.57` | Removed the commas before reading the numbers |
+| Contradictions | 140 roads have a speed limit of 0 and 20 have none. In 331 collisions the severity code does not match the injury counts, and 13 have no code | Marked them for review; the original values are unchanged |
+| Coverage | Only 790 of 16,569 road segment years (4.77%) have a traffic count from the same year | We make no claims about risk per vehicle |
+| Accuracy | There is no independent source to check the records against | The data agrees with itself, but we cannot prove it is correct |
 
-Details: `project/documentation/03_QUALITY_AND_PROFILE.md` and `project/evidence/`.
+More detail: [03 Data quality](project/documentation/03_QUALITY_AND_PROFILE.md), with all the numbers in [03 – detailed profiling](project/documentation/03_QUALITY_AND_PROFILE.md#detailed-profiling-recomputed-from-the-raw-csvs-7-november-2026), and the evidence files in [`project/evidence/`](project/evidence/).
 
-## 7. FAIR assessment
+## 6. FAIR assessment
 
-| Object | F | A | I | R | Score |
+FAIR means Findable, Accessible, Interoperable and Reusable. Each letter gets 0, 1 or 2 points.
+
+| What we scored | F | A | I | R | Total |
 | --- | :-: | :-: | :-: | :-: | :-: |
-| Original sources combined | 2 | 2 | 1 | 1 | **6/8** |
-| (per source: Collisions 6/8, Streets 6/8, Traffic 7/8) | | | | | |
-| Our project package, before → after | 0→1 | 1→1 | 1→2 | 1→1 | **3/8 → 5/8** |
+| The three original datasets together | 2 | 2 | 1 | 1 | **6/8** |
+| (each on its own: Collisions 6/8, Streets 6/8, Traffic 7/8) | | | | | |
+| Our project files, before and after our work | 0→1 | 1→1 | 1→2 | 1→1 | **3/8 → 5/8** |
 
-These are reasoned rubric scores, not an official certification. Details: `project/documentation/02_FAIR_ASSESSMENT.md`.
+These are our own scores using the course rubric, not an official rating. More detail: [02 FAIR assessment](project/documentation/02_FAIR_ASSESSMENT.md).
 
-## 8. Tableau Prep and Python parity
+## 7. Tableau and Python give the same results
 
-Both implementations were run on the same snapshot on 7 November 2026 and compared field by field:
+On 7 November 2026 we ran both versions on the same files and compared them value by value:
 
-| Comparison | Result |
+| What we compared | Result |
 | --- | --- |
-| Crash counts (16,569 segment-years, 10,968 intersection-years ×2) | Identical |
-| Intersection speed-status flags | Identical (fixed from 114 differences: zero-speed rule added in Tableau) |
-| Segment lengths (`SEGLENGTH`) | Identical (fixed from 8 differences: decimal type set at the Tableau input) |
-| Column layout | Differs (Tableau keeps extra pass-through columns) |
+| Collision counts (16,569 segment years and 10,968 intersection years) | The same |
+| Speed limit status at intersections | The same, after we added the zero-speed rule in Tableau (there were 114 differences before) |
+| Segment length (`SEGLENGTH`) | The same, after we set the length to a decimal number in Tableau (there were 8 differences before) |
+| Columns in the files | Different: Tableau keeps some extra columns |
 
-Details: `project/documentation/04_CLEANING_AND_TABLEAU.md`, `project/evidence/08_…csv`, `09_…csv`.
+More detail: [04 – comparison](project/documentation/04_CLEANING_AND_TABLEAU.md#verified-comparison-tableau-run-of-7-november-2026), [04 – fixes we made in Tableau](project/documentation/04_CLEANING_AND_TABLEAU.md#fixes-applied) and the evidence files [`08`](project/evidence/08_tableau_python_count_reconciliation.csv) and [`09`](project/evidence/09_tableau_speed_status_differences.csv).
 
-## 9. How to reproduce
+## 8. How to run it yourself
 
-Requirements: Python 3.10+ (tested with 3.11.0 and pandas 2.3.3 on Windows 11). Run in PowerShell from the `project` folder:
+You need Python 3.10 or newer. We tested with Python 3.11.0 and pandas 2.3.3 on Windows 11. In PowerShell:
 
 ```powershell
 cd project
 py -3 -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
-python -m unittest discover -s tests -v      # expect: 10 tests OK
-python pipeline.py                           # rebuilds data/output
-python audit_evidence.py                     # rebuilds evidence/
-python pipeline.py                           # second run: identical output hashes
+python -m unittest discover -s tests -v      # all 10 tests should pass
+python pipeline.py                           # creates data/output
+python audit_evidence.py                     # creates the evidence files
+python pipeline.py                           # run again: the checksums do not change
 ```
 
-The outputs are **byte-identical** across runs and operating systems (Windows and Linux); compare `output_sha256` in `data/output/quality_metrics.json`. Raw files are never modified. To open the Tableau flow, open `tableau/Seattle_Road_Safety_Final.tflx` in Tableau Prep Builder; it contains its own copy of the three source files.
+Run `pipeline.py` first, because it creates the output files the other steps need. Every run gives exactly the same files, on Windows and on Linux. You can check this with the `output_sha256` values in [`quality_metrics.json`](project/data/output/quality_metrics.json). The raw files are never changed.
 
-## 10. Data contract (ODCS v3.2.0)
+To open the Tableau flow, open [`tableau/Seattle_Road_Safety_Final.tflx`](tableau/Seattle_Road_Safety_Final.tflx) in Tableau Prep Builder. It already contains the three source files.
 
-`project/data_contract.yaml` follows the [Bitol Open Data Contract Standard v3.2.0](https://bitol-io.github.io/open-data-contract-standard/). Status: **active** (approved by the group on 7 November 2026).
+What each file does and what you should see when you run it: [05 Python – how to run it](project/documentation/05_PYTHON_REPRODUCIBILITY.md#6-how-to-run-it) and [05 Python – can the results be reproduced?](project/documentation/05_PYTHON_REPRODUCIBILITY.md#8-can-the-results-be-reproduced).
 
-- 5 tables, 79 columns with types, units, keys and descriptions
-- 49 executable quality checks: row counts, unique grain, required fields, crash conservation (23,774 / 17,751 / 53,936), and monitoring of missing weather, traffic coverage and severity mismatches
-- team, access roles, sources and licences, download date, input hashes, STOP and quarantine rules
+## 9. Data contract
 
-Validate it yourself:
+[`project/data_contract.yaml`](project/data_contract.yaml) follows the [Bitol Open Data Contract Standard v3.2.0](https://bitol-io.github.io/open-data-contract-standard/). Our group approved it on 7 November 2026. It contains:
+
+- all 5 output tables and their 79 columns, with types, units and descriptions
+- 49 checks that a computer can run, for example that the collision totals stay at 23,774, 17,751 and 53,936
+- the team, the sources and their licences, the download date and the file checksums
+
+To check it yourself (after running `pipeline.py`):
 
 ```powershell
 python -m pip install -r requirements-contract.txt
-python scripts/validate_data_contract.py     # expect: Schema PASS, 49/49 checks passed
+python scripts/validate_data_contract.py     # should say: Schema PASS, 49/49 passed
 ```
 
-## 11. Governance and AI readiness
+More detail: [06 Governance – data contract](project/documentation/06_GOVERNANCE_AND_AI.md#data-contract).
 
-- **Lineage, roles, risk register and AI-readiness checklist:** `project/documentation/governance/` and `06_GOVERNANCE_AND_AI.md`.
-- **STOP rules** (pipeline halts before writing): missing columns, duplicate or invalid keys, negative or non-numeric injury counts, duplicate grain, crash non-conservation, join row-count change.
-- **AI readiness:** ready for descriptive aggregates and reproducible quality demonstrations. **Not** ready for per-vehicle risk ranking, causal claims about speed or weather, individual-level prediction or automated resource allocation. No predictive model was trained.
+## 10. Governance and AI readiness
 
-## 12. Limitations
+- **Records:** the roles, risk register, data lineage and AI checklist are in [`project/documentation/governance/`](project/documentation/governance/).
+- **When the program stops:** a missing column, a missing or repeated ID, a negative or unreadable injury count, a location listed twice, a join that changes the number of rows, or totals that do not add up. In these cases it writes nothing.
+- **AI readiness:** the data is good enough for counting and describing collisions. It is not good enough for ranking risk per vehicle, for saying what causes collisions, for predictions about individual people or for automatic decisions. We did not train any model.
 
-- Counts are not exposure-adjusted: 95.23% of segment-years have no same-year traffic study, and study ADT is not full-year traffic.
-- Street attributes come from a current snapshot applied to past crash years.
-- `STATUS = Matched` is SDOT's own location matching, not proof of a match to the Streets snapshot.
-- 41 segment-year and 25 intersection-year groups have no matching street record (kept with empty street attributes).
-- Source accuracy cannot be independently verified with these files.
+More detail: [06 Governance – risk register](project/documentation/06_GOVERNANCE_AND_AI.md#risk-register) and [06 – AI readiness](project/documentation/06_GOVERNANCE_AND_AI.md#ai-readiness-assessment).
 
-## 13. Licence and attribution
+## 11. Limitations
 
-Source data © City of Seattle / Seattle Department of Transportation. Only *Traffic Counts by Study* carries an explicit licence (Public Domain); *Collisions* and *Streets* show none. **We therefore assign no licence to the combined derived data** and credit the City of Seattle/SDOT as the source. Our own code and documentation were written for an SRH University course examination.
+- The counts do not take traffic into account: 95.23% of road segment years have no traffic count from the same year, and each traffic study we use covers at most 7 days.
+- The street details describe the road network today, but we use them for earlier years too.
+- When SDOT says a location is "Matched", that is SDOT's own check. It does not prove that the street exists in our streets file.
+- 41 road segment years and 25 intersection years have no matching street. We kept them with empty street details.
+- We cannot prove that the City's original records are correct.
+
+More detail: [01 Scope – what must not be claimed](project/documentation/01_PROJECT_SCOPE_AND_ARCHITECTURE.md#what-must-not-be-claimed) and [project README – limitations](project/README.md#limitations).
+
+## 12. Licence
+
+The data belongs to the City of Seattle / SDOT. Only *Traffic Counts by Study* has a licence (Public Domain); *Collisions* and *Streets* show none. That is why we do not put a licence on the combined data. If you reuse it, please credit the City of Seattle / SDOT. We wrote our code and documentation for an SRH University exam.
+
+More detail: [02 FAIR – source evidence](project/documentation/02_FAIR_ASSESSMENT.md).

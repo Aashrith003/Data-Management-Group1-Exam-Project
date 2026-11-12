@@ -1,0 +1,6 @@
+# Keep data files exactly as they are (no line-ending conversion), so their
+# SHA-256 fingerprints match project/data/output/quality_metrics.json on every computer.
+*.csv   -text
+*.jsonl -text
+*.tflx  binary
+*.tfl   binary

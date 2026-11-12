@@ -1,0 +1,12 @@
+Check,Status,Evidence / limitation
+Raw provenance and source URL,YES,"Source URLs, SHA-256 hashes and download date (2026-11-02) recorded in metadata.json"
+Column dictionary,YES,documentation/data_dictionary.csv: 196 raw and output fields with definition sources; 29 fields undocumented by the sources are marked as such
+Machine-readable metadata,YES,"metadata.json (Schema.org Dataset): creators, licences per source, checksums, units"
+Machine-readable data contract,YES,"data_contract.yaml in ODCS v3.2.0; passes the official schema; 49 executable quality checks pass (scripts/validate_data_contract.py)"
+Unique keys and validated groups,YES,"10 tests pass; no duplicate source keys; pipeline STOP rules enforced"
+Reproducibility,YES,Repeat runs byte-identical on Windows and Linux for all 5 outputs
+Tableau parity,YES for values,"Crash counts, speed-status flags and segment lengths match; column layout differs"
+Label quality,PARTIAL,331 severity codes contradict casualty counts; 13 blank
+Traffic exposure sufficiency,NO for citywide rates,4.77% of segment-year groups have an eligible same-year study
+Independent accuracy ground truth,NO,No independent event verification in the supplied datasets
+Model readiness,LIMITED,Descriptive count analysis supported; no trained or validated prediction model

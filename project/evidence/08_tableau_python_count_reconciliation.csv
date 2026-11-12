@@ -1,0 +1,4 @@
+file,python_rows,tableau_rows,python_cols,tableau_cols,common_columns,missing_or_different_crash_counts,count_sum_python,count_sum_tableau,check
+road_safety_by_segment_year.csv,16569,16569,17,66,17,0,23774,23774,PASS
+intersection_crashes_by_year.csv,10968,10968,6,6,6,0,17751,17751,PASS
+intersection_hotspots_with_streets.csv,10968,10968,15,15,14,0,17751,17751,PASS

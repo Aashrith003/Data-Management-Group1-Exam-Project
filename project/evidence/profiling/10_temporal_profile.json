@@ -1,0 +1,9 @@
+{
+  "crash_date_earliest": "2019-01-01",
+  "crash_date_latest": "2025-12-31",
+  "traffic_start_earliest": "1990-01-30",
+  "traffic_start_latest": "2026-10-16",
+  "crash_date_parse_failures": 0,
+  "traffic_start_parse_failures": 0,
+  "note": "These are observed date minima/maxima in the local snapshots, not a promise of portal-wide temporal coverage."
+}

@@ -1,0 +1,13 @@
+dimension,measure,passing,denominator,flagged,pass_pct,policy_or_caveat
+Completeness,Crash weather present,41586.0,53936.0,12350.0,77.1,Missing weather remains missing; no imputation
+Uniqueness,Crash keys unique,53936.0,53936.0,0.0,100.0,Stop on repeated INCKEY
+Uniqueness,Street keys unique,23888.0,23888.0,0.0,100.0,Stop on repeated COMPKEY
+Uniqueness,Traffic study keys unique,64532.0,64532.0,0.0,100.0,Stop on repeated STUDY_ID
+Validity,Parseable crash date,53936.0,53936.0,0.0,100.0,Quarantine unparseable crash dates
+Validity,Injury fields nonnegative and numeric,161808.0,161808.0,0.0,100.0,Stop on impossible or malformed injury values
+Consistency,Street speed limit is not zero,23748.0,23888.0,140.0,99.41,Flag zero placeholders; do not assume zero speed
+Consistency,Segment-year output with same-year traffic evidence,790.0,16569.0,15779.0,4.77,Low coverage: do not claim exposure-adjusted risk
+Consistency,Segment group joins conserve crashes,23774.0,23774.0,0.0,100.0,Check group counts before and after joins
+Consistency,Intersection group joins conserve crashes,17751.0,17751.0,0.0,100.0,Check group counts before and after joins
+Timeliness,Same-year traffic evidence for segment-years,790.0,16569.0,15779.0,4.77,Traffic studies vary in year and period; not representative of full year
+Accuracy,Ground-truth crash/location verification,,,,,Not externally verified against police reports or field measurements

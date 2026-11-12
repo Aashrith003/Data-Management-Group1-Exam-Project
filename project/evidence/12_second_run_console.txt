@@ -1,0 +1,9 @@
+Loaded crashes: 53,936 rows, 33 fields
+Loaded streets: 23,888 rows, 53 fields
+Loaded traffic: 64,532 rows, 31 fields
+Wrote validated_crashes.csv: 53,936 rows
+Wrote road_safety_by_segment_year.csv: 16,569 rows
+Wrote intersection_crashes_by_year.csv: 10,968 rows
+Wrote intersection_hotspots_with_streets.csv: 10,968 rows
+Wrote crash_scope_summary.csv: 4 rows
+SUCCESS: All crash totals conserved; deterministic files written.

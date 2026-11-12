@@ -1,0 +1,72 @@
+output_file,field,dtype_in_csv,meaning,nullable_or_caveat
+validated_crashes.csv,INCKEY,int64,Collision event identifier (crashes source key),Expected populated for its output rows
+validated_crashes.csv,STATUS,object,"Source location matching status, not a successful join to Streets",May be null; verify against source and domain rules
+validated_crashes.csv,ADDRTYPE,object,Source address category (I=intersection; B=block/segment; A=alley),May be null; verify against source and domain rules
+validated_crashes.csv,INTKEY,float64,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,LOCATION,object,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,PERSONCOUNT,int64,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,PEDCOUNT,int64,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,PEDCYLCOUNT,int64,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,VEHCOUNT,int64,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,INJURIES,int64,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,SERIOUSINJURIES,int64,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,FATALITIES,int64,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,INCDATE,object,Original reported crash date/time string,May be null; verify against source and domain rules
+validated_crashes.csv,INCDTTM,object,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,JUNCTIONTYPE,object,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,SDOT_COLCODE,int64,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,SDOT_COLDESC,object,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,INATTENTIONIND,object,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,UNDERINFL,object,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,WEATHER,object,Original recorded weather category; may be missing or Unknown,May be null; verify against source and domain rules
+validated_crashes.csv,ROADCOND,object,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,LIGHTCOND,object,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,PEDROWNOTGRNT,object,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,SPEEDING,object,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,SEGLANEKEY,int64,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,CROSSWALKKEY,int64,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,HITPARKEDCAR,object,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,COLLISIONTYPE,object,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,SEVERITYCODE,float64,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,ADDR_SEGINTKEY,int64,Source segment or intersection location key,May be null; verify against source and domain rules
+validated_crashes.csv,SEVERITYDESC,object,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,x,float64,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,y,float64,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+validated_crashes.csv,Crash_Date,object,Normalized crash date,May be null; verify against source and domain rules
+validated_crashes.csv,Crash_Year,int64,Calendar year of crash,Expected populated for its output rows
+validated_crashes.csv,Crash_Road_Key,int64,Crash segment key derived from ADDR_SEGINTKEY,May be null; verify against source and domain rules
+validated_crashes.csv,Intersection_Key,float64,Intersection identifier from INTKEY,May be null; verify against source and domain rules
+validated_crashes.csv,Weather_Status,object,Recorded / Missing / Reported Unknown,May be null; verify against source and domain rules
+validated_crashes.csv,Road_Analysis_Status,object,Scope/inclusion classification and reason,Expected populated for its output rows
+road_safety_by_segment_year.csv,Crash_Road_Key,int64,Crash segment key derived from ADDR_SEGINTKEY,May be null; verify against source and domain rules
+road_safety_by_segment_year.csv,Crash_Year,int64,Calendar year of crash,Expected populated for its output rows
+road_safety_by_segment_year.csv,Crash_Count,int64,Number of distinct crash records in location-year group,Expected populated for its output rows
+road_safety_by_segment_year.csv,Total_Injuries,int64,Sum of recorded INJURIES in group,May be null; verify against source and domain rules
+road_safety_by_segment_year.csv,Total_Serious_Injuries,int64,Sum of recorded SERIOUSINJURIES in group,May be null; verify against source and domain rules
+road_safety_by_segment_year.csv,Total_Fatalities,int64,Sum of recorded FATALITIES in group,May be null; verify against source and domain rules
+road_safety_by_segment_year.csv,Street_Road_Key,float64,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+road_safety_by_segment_year.csv,ONSTREET,object,Street name from Streets snapshot,May be null; verify against source and domain rules
+road_safety_by_segment_year.csv,SPEEDLIMIT,float64,Recorded posted street speed limit in miles per hour (SDOT field documentation); 0 flagged as questionable,May be null; verify against source and domain rules
+road_safety_by_segment_year.csv,ARTDESCRIPT,object,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+road_safety_by_segment_year.csv,SEGLENGTH,float64,Street segment length in feet (SDOT field documentation); may have decimals,May be null; verify against source and domain rules
+road_safety_by_segment_year.csv,Traffic_Road_Key,float64,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+road_safety_by_segment_year.csv,Study_Year,float64,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+road_safety_by_segment_year.csv,Mean_Study_ADT,float64,Arithmetic mean ADT of eligible same-year TOTAL traffic studies; not full-year exposure,May be null; verify against source and domain rules
+road_safety_by_segment_year.csv,Traffic_Study_Count,float64,Number of eligible studies contributing to mean,May be null; verify against source and domain rules
+road_safety_by_segment_year.csv,Street_Match_Status,object,Whether street segment key matched the Streets snapshot,May be null; verify against source and domain rules
+road_safety_by_segment_year.csv,Traffic_Coverage_Status,object,Whether an eligible same-year traffic study is available,May be null; verify against source and domain rules
+intersection_hotspots_with_streets.csv,Intersection_Key,int64,Intersection identifier from INTKEY,May be null; verify against source and domain rules
+intersection_hotspots_with_streets.csv,Crash_Year,int64,Calendar year of crash,Expected populated for its output rows
+intersection_hotspots_with_streets.csv,Crash_Count,int64,Number of distinct crash records in location-year group,Expected populated for its output rows
+intersection_hotspots_with_streets.csv,Total_Injuries,int64,Sum of recorded INJURIES in group,May be null; verify against source and domain rules
+intersection_hotspots_with_streets.csv,Total_Serious_Injuries,int64,Sum of recorded SERIOUSINJURIES in group,May be null; verify against source and domain rules
+intersection_hotspots_with_streets.csv,Total_Fatalities,int64,Sum of recorded FATALITIES in group,May be null; verify against source and domain rules
+intersection_hotspots_with_streets.csv,Connected_Segment_Count,float64,Distinct street segments connected to the intersection,May be null; verify against source and domain rules
+intersection_hotspots_with_streets.csv,Connected_Street_Name_Count,float64,Distinct named streets connected to the intersection,May be null; verify against source and domain rules
+intersection_hotspots_with_streets.csv,Min_Speed_Limit,float64,Minimum recorded endpoint speed value; includes zero source placeholders,May be null; verify against source and domain rules
+intersection_hotspots_with_streets.csv,Max_Speed_Limit,float64,Maximum recorded endpoint speed value,May be null; verify against source and domain rules
+intersection_hotspots_with_streets.csv,Distinct_Speed_Limits,float64,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+intersection_hotspots_with_streets.csv,Zero_Speed_Limit_Endpoints,float64,Number of intersection endpoint rows with a zero speed limit,May be null; verify against source and domain rules
+intersection_hotspots_with_streets.csv,Missing_Speed_Limit_Endpoints,float64,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules
+intersection_hotspots_with_streets.csv,Speed_Limit_Status,object,"Flag class for recorded speed limits, prioritizing zero placeholders",May be null; verify against source and domain rules
+intersection_hotspots_with_streets.csv,Intersection_Street_Status,object,Source field retained for traceability; consult Seattle original schema,May be null; verify against source and domain rules

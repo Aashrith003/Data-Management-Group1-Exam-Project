@@ -1,0 +1,7 @@
+check,measure,result,evidence,why_it_matters
+FD - street record,COMPKEY -> ONSTREET (current Streets snapshot),PASS in snapshot,"23,888 distinct COMPKEY values among 23,888 rows","Street attributes should come from the keyed Streets table, not the collision text."
+FD - intersection text,INTKEY -> LOCATION (crash source),PASS in snapshot,No differing non-null LOCATION strings found for the same non-null INTKEY,Intersection names are descriptive; INTKEY is the grouping key.
+Inclusion dependency,Matched block crash ADDR_SEGINTKEY ∈ Streets.COMPKEY,PARTIAL,"29 of 8,245 distinct crash segment keys absent from Streets snapshot",Historical collisions and current Streets may not cover identical snapshots.
+Cardinality,Traffic.COMPKEY -> many STUDY_ID,ONE-TO-MANY,"5,298 of 6,699 traffic segment keys have multiple studies",Pre-aggregate/choose eligible study records before joining crash group counts.
+IQR screening,"Traffic.ADT outside [Q1-1.5 IQR, Q3+1.5 IQR]",REVIEW CANDIDATES,"5,569/64,532 ADT values flagged; upper fence 25,839.25",High traffic is plausible; do not automatically delete outliers.
+Domain review,Traffic.ADT = 0,REVIEW CANDIDATES,"2,738 zero ADT rows",Zero values should be documented before inclusion in derived averages.

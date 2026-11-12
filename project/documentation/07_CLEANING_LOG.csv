@@ -1,0 +1,15 @@
+step,source,operation,before_rows,after_rows,issue_and_decision,verification
+1,Crashes,Load immutable CSV,53936,53936,No raw values changed,Input SHA256
+2,Streets,Load immutable CSV,23888,23888,No raw values changed,Input SHA256
+3,Traffic,Load immutable CSV,64532,64532,No raw values changed,Input SHA256
+4,Crashes,Parse dates and normalize keys,53936,53936,Invalid-date records quarantined (currently zero),Date test and quarantine count
+5,Crashes,Label analytical scope,53936,53936,Included road 23774 and intersections 17751; outside 12411 still retained,Scope sums to 53936
+6,Crashes segment branch,Filter included matched block crashes,53936,23774,Analytical filter not a destructive source cleaning,Group identity
+7,Crashes intersection branch,Filter included matched intersections,53936,17751,Distinct analysis population,Group identity
+8,Street endpoints,Union low/high intersection keys,23888,47706,Two endpoints per road segment with null/zero key exclusions,Endpoint summary
+9,Traffic,Filter eligible total same-year positive ADT studies,64532,4730,Study coverage deliberately conservative,Eligible study count
+10,Segment branch,Aggregate by segment and year,23774,16569,Distinct crash counts conserved,Crash_Count sums to 23774
+11,Intersection branch,Aggregate by intersection and year,17751,10968,Distinct crash counts conserved,Crash_Count sums to 17751
+12,Segment branch,LEFT JOIN streets and traffic aggregate,16569,16569,Keep absent reference matches visible,41 missing street references
+13,Intersection branch,LEFT JOIN preaggregated endpoint info,10968,10968,Do not duplicate intersections in one-to-many join,25 missing street references
+14,All outputs,Write curated CSVs and quality metrics,53936,53936,Validated detail retains every source crash ID,Five outputs deterministic hashes

@@ -1,0 +1,6 @@
+severity_code,inconsistent_if,flagged_rows,rows_with_code,action
+Missing,SEVERITYCODE is blank,13,53936,Flag for review; source values kept unchanged
+1 = Property Damage Only,"any INJURIES, SERIOUSINJURIES or FATALITIES > 0",0,37743,Flag for review; source values kept unchanged
+2 = Injury,INJURIES and SERIOUSINJURIES both 0,273,14536,Flag for review; source values kept unchanged
+3 = Serious Injury,SERIOUSINJURIES = 0,56,1451,Flag for review; source values kept unchanged
+4 = Fatal,FATALITIES = 0,2,193,Flag for review; source values kept unchanged

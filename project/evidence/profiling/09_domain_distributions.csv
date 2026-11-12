@@ -1,0 +1,51 @@
+source,field,value,count,pct_of_source_rows
+crashes,WEATHER,Clear,26416,48.98
+crashes,WEATHER,<NULL>,12350,22.9
+crashes,WEATHER,Overcast,7151,13.26
+crashes,WEATHER,Raining,6502,12.06
+crashes,WEATHER,Other,610,1.13
+crashes,WEATHER,Snowing,250,0.46
+crashes,WEATHER,Unknown,246,0.46
+crashes,WEATHER,Fog/Smog/Smoke,195,0.36
+crashes,WEATHER,Partly Cloudy,133,0.25
+crashes,WEATHER,Sleet/Hail/Freezing Rain,56,0.1
+crashes,WEATHER,Blowing Sand/Dirt,14,0.03
+crashes,WEATHER,Severe Crosswind,11,0.02
+crashes,WEATHER,Blowing Snow,2,0.0
+crashes,ADDRTYPE,B,32387,60.05
+crashes,ADDRTYPE,I,20933,38.81
+crashes,ADDRTYPE,A,616,1.14
+crashes,STATUS,Matched,41721,77.35
+crashes,STATUS,Unmatched,12215,22.65
+crashes,ROADCOND,Dry,29818,55.28
+crashes,ROADCOND,<NULL>,12248,22.71
+crashes,ROADCOND,Wet,10107,18.74
+crashes,ROADCOND,Unknown,1153,2.14
+crashes,ROADCOND,Snow/Slush,271,0.5
+crashes,ROADCOND,Ice,260,0.48
+crashes,ROADCOND,Other,40,0.07
+crashes,ROADCOND,Standing Water,24,0.04
+crashes,ROADCOND,Sand/Mud/Dirt,8,0.01
+crashes,ROADCOND,Oil,7,0.01
+streets,SPEEDLIMIT,20,16950,70.96
+streets,SPEEDLIMIT,25,5913,24.75
+streets,SPEEDLIMIT,30,514,2.15
+streets,SPEEDLIMIT,0,140,0.59
+streets,SPEEDLIMIT,60,124,0.52
+streets,SPEEDLIMIT,35,112,0.47
+streets,SPEEDLIMIT,40,84,0.35
+streets,SPEEDLIMIT,<NULL>,20,0.08
+streets,SPEEDLIMIT,50,16,0.07
+streets,SPEEDLIMIT,45,8,0.03
+streets,SPEEDLIMIT,55,7,0.03
+traffic,TRAFFIC_FLOW_DIR_ID,11,13545,20.99
+traffic,TRAFFIC_FLOW_DIR_ID,1,10723,16.62
+traffic,TRAFFIC_FLOW_DIR_ID,2,10573,16.38
+traffic,TRAFFIC_FLOW_DIR_ID,3,8979,13.91
+traffic,TRAFFIC_FLOW_DIR_ID,4,8890,13.78
+traffic,TRAFFIC_FLOW_DIR_ID,8,3127,4.85
+traffic,TRAFFIC_FLOW_DIR_ID,6,3123,4.84
+traffic,TRAFFIC_FLOW_DIR_ID,5,2770,4.29
+traffic,TRAFFIC_FLOW_DIR_ID,7,2754,4.27
+traffic,TRAFFIC_FLOW_DIR_ID,9,35,0.05
+traffic,TRAFFIC_FLOW_DIR_ID,10,13,0.02

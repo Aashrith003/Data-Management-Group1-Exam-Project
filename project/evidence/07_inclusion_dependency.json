@@ -1,0 +1,6 @@
+{
+  "distinct_matched_block_crash_segment_keys": 8245,
+  "distinct_matched_block_segment_keys_not_in_streets_snapshot": 29,
+  "referential_inclusion_pct": 99.65,
+  "caution": "Street snapshot and historic crash dates differ; missing matches do not necessarily prove bad crash source data."
+}

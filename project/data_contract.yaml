@@ -1,0 +1,1336 @@
+# Open Data Contract Standard (ODCS) v3.2.0 - https://bitol-io.github.io/open-data-contract-standard/
+apiVersion: v3.2.0
+kind: DataContract
+id: seattle-road-safety-curated
+name: Seattle Road Safety - curated collision hotspot tables
+version: 2.0.0
+status: active
+domain: transportation-safety
+dataProduct: seattle_road_safety_hotspots
+tenant: SRH University Data Management, Group 1
+tags:
+- seattle
+- sdot
+- road-safety
+- collision-counts
+- fair
+- data-quality
+contractCreatedTs: '2026-11-07T00:00:00Z'
+description:
+  purpose: Describe recorded collision counts by road segment and intersection (2019-2025) and the data-quality limits that
+    apply to them.
+  usage: Identify recorded collision-count hotspots and data-quality issues for further investigation by transportation analysts
+    and road-safety researchers.
+  limitations: 'Counts are not exposure-adjusted risk: only 4.77% of segment-years have an eligible same-year traffic study.
+    Street attributes come from a current snapshot, not a historical inventory. Study ADT is not full-year exposure. No independent
+    ground-truth accuracy check. No production warehouse or AI model. Not for causal inference, individual-level prediction
+    or automated resource allocation.'
+  authoritativeDefinitions:
+  - type: businessDefinition
+    url: https://www.seattle.gov/Documents/Departments/SDOT/GIS/Collisions_OD.pdf
+    description: SDOT Collisions field documentation
+  - type: businessDefinition
+    url: https://www.seattle.gov/Documents/Departments/SDOT/GIS/Seattle_Streets_OD.pdf
+    description: SDOT Seattle Streets field documentation (2018-07-09)
+servers:
+- id: python-curated
+  server: python-curated
+  type: local
+  environment: prod
+  format: csv
+  path: ./data/output/*.csv
+  description: Curated outputs written by pipeline.py (authoritative).
+- id: tableau-exports
+  server: tableau-exports
+  type: local
+  environment: validation
+  format: csv
+  path: ./data/tableau_output/*.csv
+  description: Tableau Prep exports used for independent reconciliation; the first four outputs only.
+schema:
+- id: validated_crashes
+  name: validated_crashes
+  physicalName: validated_crashes.csv
+  logicalType: object
+  physicalType: csv file
+  description: All 53,936 source collisions with normalized date, keys, weather status and analysis-scope status. Excluded
+    records are kept, not deleted.
+  dataGranularityDescription: One row per original source collision (INCKEY), 2019-2025.
+  properties:
+  - id: validated_crashes_INCKEY
+    name: INCKEY
+    logicalType: integer
+    physicalType: int64
+    description: 'A unique key for the incident. Unit: Identifier.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+    primaryKey: true
+    primaryKeyPosition: 1
+    required: true
+    unique: true
+    semanticType: dimension
+    quality:
+    - id: validated_crashes_INCKEY_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: INCKEY must always be populated.
+  - id: validated_crashes_STATUS
+    name: STATUS
+    logicalType: string
+    physicalType: object
+    description: 'Source location-matching status (Matched / Unmatched). Not proof of a match to the Streets snapshot. Unit:
+      Category.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; Observed values in this snapshot
+    semanticType: dimension
+    examples:
+    - Matched
+    - Unmatched
+  - id: validated_crashes_ADDRTYPE
+    name: ADDRTYPE
+    logicalType: string
+    physicalType: object
+    description: 'Collision address type: B = Block, I = Intersection, A = Alley. Unit: Category.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf; codes Observed values in this snapshot
+    semanticType: dimension
+    examples:
+    - A
+    - B
+    - I
+  - id: validated_crashes_INTKEY
+    name: INTKEY
+    logicalType: integer
+    physicalType: float64
+    description: 'Key of the intersection associated with the collision. Unit: Identifier.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+  - id: validated_crashes_LOCATION
+    name: LOCATION
+    logicalType: string
+    physicalType: object
+    description: 'Description of the general location of the collision. Unit: Text.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+  - id: validated_crashes_PERSONCOUNT
+    name: PERSONCOUNT
+    logicalType: integer
+    physicalType: int64
+    description: 'Total number of people involved in the collision. Unit: People (count).'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+    semanticType: measure
+  - id: validated_crashes_PEDCOUNT
+    name: PEDCOUNT
+    logicalType: integer
+    physicalType: int64
+    description: 'Number of pedestrians involved (entered by the state). Unit: People (count).'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+    semanticType: measure
+  - id: validated_crashes_PEDCYLCOUNT
+    name: PEDCYLCOUNT
+    logicalType: integer
+    physicalType: int64
+    description: 'Number of bicycles involved (entered by the state). Unit: Bicycles (count).'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+    semanticType: measure
+  - id: validated_crashes_VEHCOUNT
+    name: VEHCOUNT
+    logicalType: integer
+    physicalType: int64
+    description: 'Number of vehicles involved (entered by the state). Unit: Vehicles (count).'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+    semanticType: measure
+  - id: validated_crashes_INJURIES
+    name: INJURIES
+    logicalType: integer
+    physicalType: int64
+    description: 'Number of total injuries (entered by the state). Unit: People (count).'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+    semanticType: measure
+  - id: validated_crashes_SERIOUSINJURIES
+    name: SERIOUSINJURIES
+    logicalType: integer
+    physicalType: int64
+    description: 'Number of serious injuries (entered by the state). Unit: People (count).'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+    semanticType: measure
+  - id: validated_crashes_FATALITIES
+    name: FATALITIES
+    logicalType: integer
+    physicalType: int64
+    description: 'Number of fatalities (entered by the state). Unit: People (count).'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+    semanticType: measure
+  - id: validated_crashes_INCDATE
+    name: INCDATE
+    logicalType: string
+    physicalType: object
+    description: 'Date of the incident. Unit: Date.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+  - id: validated_crashes_INCDTTM
+    name: INCDTTM
+    logicalType: string
+    physicalType: object
+    description: 'Date and time of the incident (text). Unit: Date/time text.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+  - id: validated_crashes_JUNCTIONTYPE
+    name: JUNCTIONTYPE
+    logicalType: string
+    physicalType: object
+    description: 'Category of junction at which the collision took place. Unit: Category.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+  - id: validated_crashes_SDOT_COLCODE
+    name: SDOT_COLCODE
+    logicalType: integer
+    physicalType: int64
+    description: 'Code given to the collision by SDOT. Unit: Code.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+  - id: validated_crashes_SDOT_COLDESC
+    name: SDOT_COLDESC
+    logicalType: string
+    physicalType: object
+    description: 'Description of the collision corresponding to SDOT_COLCODE. Unit: Text.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+  - id: validated_crashes_INATTENTIONIND
+    name: INATTENTIONIND
+    logicalType: string
+    physicalType: object
+    description: 'Whether the collision was due to inattention (Y; blank = not indicated). Unit: Flag.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+  - id: validated_crashes_UNDERINFL
+    name: UNDERINFL
+    logicalType: string
+    physicalType: object
+    description: 'Whether a driver involved was under the influence of drugs or alcohol (Y/N). Unit: Flag.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+  - id: validated_crashes_WEATHER
+    name: WEATHER
+    logicalType: string
+    physicalType: object
+    description: 'Weather conditions at the time of the collision. Unit: Category.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+  - id: validated_crashes_ROADCOND
+    name: ROADCOND
+    logicalType: string
+    physicalType: object
+    description: 'Condition of the road during the collision. Unit: Category.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+  - id: validated_crashes_LIGHTCOND
+    name: LIGHTCOND
+    logicalType: string
+    physicalType: object
+    description: 'Light conditions during the collision. Unit: Category.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+  - id: validated_crashes_PEDROWNOTGRNT
+    name: PEDROWNOTGRNT
+    logicalType: string
+    physicalType: object
+    description: 'Whether pedestrian right of way was not granted (Y; blank = not indicated). Unit: Flag.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+  - id: validated_crashes_SPEEDING
+    name: SPEEDING
+    logicalType: string
+    physicalType: object
+    description: 'Whether speeding was a factor (Y; blank = not indicated). Unit: Flag.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+  - id: validated_crashes_SEGLANEKEY
+    name: SEGLANEKEY
+    logicalType: integer
+    physicalType: int64
+    description: 'Key for the lane segment in which the collision occurred. Unit: Identifier.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+  - id: validated_crashes_CROSSWALKKEY
+    name: CROSSWALKKEY
+    logicalType: integer
+    physicalType: int64
+    description: 'Key for the crosswalk at which the collision occurred. Unit: Identifier.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+  - id: validated_crashes_HITPARKEDCAR
+    name: HITPARKEDCAR
+    logicalType: string
+    physicalType: object
+    description: 'Whether the collision involved hitting a parked car (Y/N). Unit: Flag.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+  - id: validated_crashes_COLLISIONTYPE
+    name: COLLISIONTYPE
+    logicalType: string
+    physicalType: object
+    description: 'Collision type. Unit: Category.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+  - id: validated_crashes_SEVERITYCODE
+    name: SEVERITYCODE
+    logicalType: number
+    physicalType: float64
+    description: 'Collision severity code: 1 = Property Damage Only, 2 = Injury, 3 = Serious Injury, 4 = Fatal. The 2018 SDOT
+      document lists an older scheme; codes here are taken from SEVERITYDESC. Unit: Code.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; Observed values in this snapshot
+  - id: validated_crashes_ADDR_SEGINTKEY
+    name: ADDR_SEGINTKEY
+    logicalType: integer
+    physicalType: int64
+    description: 'Segment/intersection key of the collision address; joined to Streets.COMPKEY when ADDRTYPE = B. Unit: Identifier.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; Interpreted from field name; not defined by source; join use from pipeline.py
+  - id: validated_crashes_SEVERITYDESC
+    name: SEVERITYDESC
+    logicalType: string
+    physicalType: object
+    description: 'Description of collision severity. Unit: Category.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; SDOT Collisions_OD.pdf
+  - id: validated_crashes_x
+    name: x
+    logicalType: number
+    physicalType: float64
+    description: 'Point X coordinate, Washington State Plane North (ArcGIS spatial reference 2926). Unit: US survey feet.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; ArcGIS layer spatial reference; consistent with value range
+  - id: validated_crashes_y
+    name: y
+    logicalType: number
+    physicalType: float64
+    description: 'Point Y coordinate, Washington State Plane North (ArcGIS spatial reference 2926). Unit: US survey feet.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/crashes; ArcGIS layer spatial reference; consistent with value range
+  - id: validated_crashes_Crash_Date
+    name: Crash_Date
+    logicalType: date
+    physicalType: object
+    description: 'Collision date parsed from INCDATE. Unit: Date (YYYY-MM-DD).'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+  - id: validated_crashes_Crash_Year
+    name: Crash_Year
+    logicalType: integer
+    physicalType: int64
+    description: 'Calendar year of Crash_Date. Unit: Year.'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    required: true
+    quality:
+    - id: validated_crashes_Crash_Year_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Crash_Year must always be populated.
+  - id: validated_crashes_Crash_Road_Key
+    name: Crash_Road_Key
+    logicalType: integer
+    physicalType: int64
+    description: 'Numeric ADDR_SEGINTKEY; segment join key for ADDRTYPE = B. Unit: Identifier.'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    required: true
+    quality:
+    - id: validated_crashes_Crash_Road_Key_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Crash_Road_Key must always be populated.
+  - id: validated_crashes_Intersection_Key
+    name: Intersection_Key
+    logicalType: integer
+    physicalType: float64
+    description: 'Numeric INTKEY; intersection join key for ADDRTYPE = I. Unit: Identifier.'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+  - id: validated_crashes_Weather_Status
+    name: Weather_Status
+    logicalType: string
+    physicalType: object
+    description: 'Recorded / Missing (blank WEATHER) / Reported Unknown (WEATHER = Unknown). Unit: Category.'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    required: true
+    semanticType: dimension
+    examples:
+    - Missing
+    - Recorded
+    - Reported Unknown
+    quality:
+    - id: validated_crashes_Weather_Status_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Weather_Status must always be populated.
+  - id: validated_crashes_Road_Analysis_Status
+    name: Road_Analysis_Status
+    logicalType: string
+    physicalType: object
+    description: 'Analysis scope: Included - Road Segment, Included - Intersection, Outside - Unmatched Location, Outside
+      - Alley. Unit: Category.'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    required: true
+    semanticType: dimension
+    examples:
+    - Included - Intersection
+    - Included - Road Segment
+    - Outside - Alley
+    - Outside - Unmatched Location
+    quality:
+    - id: validated_crashes_Road_Analysis_Status_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Road_Analysis_Status must always be populated.
+  quality:
+  - id: validated_crashes_rowcount
+    type: library
+    metric: rowCount
+    mustBe: 53936
+    dimension: completeness
+    severity: error
+    description: Row count for the archived snapshot downloaded 2026-11-02 (53,936 rows).
+  - id: validated_crashes_grain_unique
+    type: library
+    metric: duplicateValues
+    mustBe: 0
+    arguments:
+      properties:
+      - INCKEY
+    dimension: uniqueness
+    severity: error
+    description: The grain (INCKEY) is unique. Pipeline STOP rule.
+  - id: validated_crashes_weather_missing
+    type: sql
+    dimension: completeness
+    severity: info
+    description: 'Monitor: WEATHER missing (12,350 = 22.90% in the snapshot). Kept, not imputed.'
+    query: SELECT COUNT(*) FROM validated_crashes WHERE Weather_Status = 'Missing'
+    mustBe: 12350
+  - id: validated_crashes_severity_mismatch
+    type: sql
+    dimension: accuracy
+    severity: warning
+    description: 'Monitor: SEVERITYCODE contradicts casualty counts (331 in the snapshot). Flagged, source values unchanged.'
+    query: SELECT COUNT(*) FROM validated_crashes WHERE (SEVERITYCODE = 2 AND INJURIES = 0 AND SERIOUSINJURIES = 0) OR (SEVERITYCODE
+      = 3 AND SERIOUSINJURIES = 0) OR (SEVERITYCODE = 4 AND FATALITIES = 0)
+    mustBe: 331
+- id: road_safety_by_segment_year
+  name: road_safety_by_segment_year
+  physicalName: road_safety_by_segment_year.csv
+  logicalType: object
+  physicalType: csv file
+  description: Recorded collision counts per road segment and year, left-joined to Streets attributes and eligible same-year
+    traffic studies.
+  dataGranularityDescription: One row per street segment and crash year.
+  properties:
+  - id: road_safety_by_segment_year_Crash_Road_Key
+    name: Crash_Road_Key
+    logicalType: integer
+    physicalType: int64
+    description: 'Numeric ADDR_SEGINTKEY; segment join key for ADDRTYPE = B. Unit: Identifier.'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    primaryKey: true
+    primaryKeyPosition: 1
+    required: true
+    semanticType: dimension
+    quality:
+    - id: road_safety_by_segment_year_Crash_Road_Key_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Crash_Road_Key must always be populated.
+  - id: road_safety_by_segment_year_Crash_Year
+    name: Crash_Year
+    logicalType: integer
+    physicalType: int64
+    description: 'Calendar year of Crash_Date. Unit: Year.'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    primaryKey: true
+    primaryKeyPosition: 2
+    required: true
+    semanticType: dimension
+    quality:
+    - id: road_safety_by_segment_year_Crash_Year_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Crash_Year must always be populated.
+  - id: road_safety_by_segment_year_Crash_Count
+    name: Crash_Count
+    logicalType: integer
+    physicalType: int64
+    description: 'Distinct collisions (INCKEY) in the location-year group. Unit: Collisions (count).'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    required: true
+    semanticType: measure
+    quality:
+    - id: road_safety_by_segment_year_Crash_Count_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Crash_Count must always be populated.
+    - id: road_safety_by_segment_year_Crash_Count_positive
+      type: sql
+      dimension: conformity
+      severity: error
+      description: Crash_Count is a positive integer.
+      query: SELECT COUNT(*) FROM road_safety_by_segment_year WHERE Crash_Count < 1
+      mustBe: 0
+  - id: road_safety_by_segment_year_Total_Injuries
+    name: Total_Injuries
+    logicalType: integer
+    physicalType: int64
+    description: 'Sum of INJURIES in the group. Unit: People (count).'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    required: true
+    semanticType: measure
+    quality:
+    - id: road_safety_by_segment_year_Total_Injuries_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Total_Injuries must always be populated.
+  - id: road_safety_by_segment_year_Total_Serious_Injuries
+    name: Total_Serious_Injuries
+    logicalType: integer
+    physicalType: int64
+    description: 'Sum of SERIOUSINJURIES in the group. Unit: People (count).'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    required: true
+    semanticType: measure
+    quality:
+    - id: road_safety_by_segment_year_Total_Serious_Injuries_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Total_Serious_Injuries must always be populated.
+  - id: road_safety_by_segment_year_Total_Fatalities
+    name: Total_Fatalities
+    logicalType: integer
+    physicalType: int64
+    description: 'Sum of FATALITIES in the group. Unit: People (count).'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    required: true
+    semanticType: measure
+    quality:
+    - id: road_safety_by_segment_year_Total_Fatalities_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Total_Fatalities must always be populated.
+  - id: road_safety_by_segment_year_Street_Road_Key
+    name: Street_Road_Key
+    logicalType: integer
+    physicalType: float64
+    description: 'Streets COMPKEY matched to the crash segment (blank if no match). Unit: Identifier.'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+  - id: road_safety_by_segment_year_ONSTREET
+    name: ONSTREET
+    logicalType: string
+    physicalType: object
+    description: 'Street name of the segment. Unit: Text.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/streets; Interpreted from field name; not defined by source
+  - id: road_safety_by_segment_year_SPEEDLIMIT
+    name: SPEEDLIMIT
+    logicalType: number
+    physicalType: float64
+    description: 'Posted street speed limit. 0 appears to be a placeholder (140 segments). Unit: Miles per hour.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/streets; SDOT Seattle_Streets_OD.pdf (2018-07-09)
+  - id: road_safety_by_segment_year_ARTDESCRIPT
+    name: ARTDESCRIPT
+    logicalType: string
+    physicalType: object
+    description: 'Arterial class code description. Unit: Text.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/streets; SDOT Seattle_Streets_OD.pdf (2018-07-09)
+  - id: road_safety_by_segment_year_SEGLENGTH
+    name: SEGLENGTH
+    logicalType: number
+    physicalType: float64
+    description: 'Street segment length. Unit: Feet.'
+    customProperties:
+    - property: definitionSource
+      value: Copied from raw/streets; SDOT Seattle_Streets_OD.pdf (2018-07-09); matches Shape__Length (median ratio 1.000)
+    semanticType: measure
+  - id: road_safety_by_segment_year_Traffic_Road_Key
+    name: Traffic_Road_Key
+    logicalType: integer
+    physicalType: float64
+    description: 'Traffic COMPKEY matched to the crash segment and year (blank if none). Unit: Identifier.'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+  - id: road_safety_by_segment_year_Study_Year
+    name: Study_Year
+    logicalType: integer
+    physicalType: float64
+    description: 'Start year of the matched eligible traffic studies. Unit: Year.'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+  - id: road_safety_by_segment_year_Mean_Study_ADT
+    name: Mean_Study_ADT
+    logicalType: number
+    physicalType: float64
+    description: 'Mean ADT of eligible same-year studies (2019-2025, TRAFFIC_FLOW_DIR_ID = 11, ADT > 0). Unit: Vehicles per
+      day (study period).'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    semanticType: measure
+  - id: road_safety_by_segment_year_Traffic_Study_Count
+    name: Traffic_Study_Count
+    logicalType: integer
+    physicalType: float64
+    description: 'Number of eligible studies averaged. Unit: Studies (count).'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    semanticType: measure
+  - id: road_safety_by_segment_year_Street_Match_Status
+    name: Street_Match_Status
+    logicalType: string
+    physicalType: object
+    description: 'Street Matched / No Street Match. Unit: Category.'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    required: true
+    semanticType: dimension
+    examples:
+    - No Street Match
+    - Street Matched
+    quality:
+    - id: road_safety_by_segment_year_Street_Match_Status_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Street_Match_Status must always be populated.
+  - id: road_safety_by_segment_year_Traffic_Coverage_Status
+    name: Traffic_Coverage_Status
+    logicalType: string
+    physicalType: object
+    description: 'Eligible Study Available / No Eligible Same-Year Study. Unit: Category.'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    required: true
+    semanticType: dimension
+    examples:
+    - Eligible Study Available
+    - No Eligible Same-Year Study
+    quality:
+    - id: road_safety_by_segment_year_Traffic_Coverage_Status_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Traffic_Coverage_Status must always be populated.
+  quality:
+  - id: road_safety_by_segment_year_rowcount
+    type: library
+    metric: rowCount
+    mustBe: 16569
+    dimension: completeness
+    severity: error
+    description: Row count for the archived snapshot downloaded 2026-11-02 (16,569 rows).
+  - id: road_safety_by_segment_year_grain_unique
+    type: library
+    metric: duplicateValues
+    mustBe: 0
+    arguments:
+      properties:
+      - Crash_Road_Key
+      - Crash_Year
+    dimension: uniqueness
+    severity: error
+    description: The grain (Crash_Road_Key, Crash_Year) is unique. Pipeline STOP rule.
+  - id: road_safety_by_segment_year_conservation
+    type: sql
+    dimension: consistency
+    severity: error
+    description: 'Crash conservation: SUM(Crash_Count) equals 23,774 source crashes in scope. Pipeline STOP rule.'
+    query: SELECT SUM(Crash_Count) FROM road_safety_by_segment_year
+    mustBe: 23774
+  - id: segment_traffic_coverage
+    type: sql
+    dimension: coverage
+    severity: info
+    description: 'Monitor: segment-years with an eligible same-year traffic study (790 of 16,569 = 4.77%). Not sufficient
+      for rate-based risk.'
+    query: SELECT COUNT(*) FROM road_safety_by_segment_year WHERE Traffic_Coverage_Status = 'Eligible Study Available'
+    mustBe: 790
+- id: intersection_crashes_by_year
+  name: intersection_crashes_by_year
+  physicalName: intersection_crashes_by_year.csv
+  logicalType: object
+  physicalType: csv file
+  description: Recorded collision counts per intersection and year.
+  dataGranularityDescription: One row per intersection and crash year.
+  properties:
+  - id: intersection_crashes_by_year_Intersection_Key
+    name: Intersection_Key
+    logicalType: integer
+    physicalType: int64
+    description: 'Numeric INTKEY; intersection join key for ADDRTYPE = I. Unit: Identifier.'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    primaryKey: true
+    primaryKeyPosition: 1
+    required: true
+    semanticType: dimension
+    quality:
+    - id: intersection_crashes_by_year_Intersection_Key_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Intersection_Key must always be populated.
+  - id: intersection_crashes_by_year_Crash_Year
+    name: Crash_Year
+    logicalType: integer
+    physicalType: int64
+    description: 'Calendar year of Crash_Date. Unit: Year.'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    primaryKey: true
+    primaryKeyPosition: 2
+    required: true
+    semanticType: dimension
+    quality:
+    - id: intersection_crashes_by_year_Crash_Year_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Crash_Year must always be populated.
+  - id: intersection_crashes_by_year_Crash_Count
+    name: Crash_Count
+    logicalType: integer
+    physicalType: int64
+    description: 'Distinct collisions (INCKEY) in the location-year group. Unit: Collisions (count).'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    required: true
+    semanticType: measure
+    quality:
+    - id: intersection_crashes_by_year_Crash_Count_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Crash_Count must always be populated.
+    - id: intersection_crashes_by_year_Crash_Count_positive
+      type: sql
+      dimension: conformity
+      severity: error
+      description: Crash_Count is a positive integer.
+      query: SELECT COUNT(*) FROM intersection_crashes_by_year WHERE Crash_Count < 1
+      mustBe: 0
+  - id: intersection_crashes_by_year_Total_Injuries
+    name: Total_Injuries
+    logicalType: integer
+    physicalType: int64
+    description: 'Sum of INJURIES in the group. Unit: People (count).'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    required: true
+    semanticType: measure
+    quality:
+    - id: intersection_crashes_by_year_Total_Injuries_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Total_Injuries must always be populated.
+  - id: intersection_crashes_by_year_Total_Serious_Injuries
+    name: Total_Serious_Injuries
+    logicalType: integer
+    physicalType: int64
+    description: 'Sum of SERIOUSINJURIES in the group. Unit: People (count).'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    required: true
+    semanticType: measure
+    quality:
+    - id: intersection_crashes_by_year_Total_Serious_Injuries_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Total_Serious_Injuries must always be populated.
+  - id: intersection_crashes_by_year_Total_Fatalities
+    name: Total_Fatalities
+    logicalType: integer
+    physicalType: int64
+    description: 'Sum of FATALITIES in the group. Unit: People (count).'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    required: true
+    semanticType: measure
+    quality:
+    - id: intersection_crashes_by_year_Total_Fatalities_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Total_Fatalities must always be populated.
+  quality:
+  - id: intersection_crashes_by_year_rowcount
+    type: library
+    metric: rowCount
+    mustBe: 10968
+    dimension: completeness
+    severity: error
+    description: Row count for the archived snapshot downloaded 2026-11-02 (10,968 rows).
+  - id: intersection_crashes_by_year_grain_unique
+    type: library
+    metric: duplicateValues
+    mustBe: 0
+    arguments:
+      properties:
+      - Intersection_Key
+      - Crash_Year
+    dimension: uniqueness
+    severity: error
+    description: The grain (Intersection_Key, Crash_Year) is unique. Pipeline STOP rule.
+  - id: intersection_crashes_by_year_conservation
+    type: sql
+    dimension: consistency
+    severity: error
+    description: 'Crash conservation: SUM(Crash_Count) equals 17,751 source crashes in scope. Pipeline STOP rule.'
+    query: SELECT SUM(Crash_Count) FROM intersection_crashes_by_year
+    mustBe: 17751
+- id: intersection_hotspots_with_streets
+  name: intersection_hotspots_with_streets
+  physicalName: intersection_hotspots_with_streets.csv
+  logicalType: object
+  physicalType: csv file
+  description: Intersection-year counts left-joined to street attributes pre-aggregated per intersection (endpoints unioned
+    and aggregated before the join).
+  dataGranularityDescription: One row per intersection and crash year.
+  properties:
+  - id: intersection_hotspots_with_streets_Intersection_Key
+    name: Intersection_Key
+    logicalType: integer
+    physicalType: int64
+    description: 'Numeric INTKEY; intersection join key for ADDRTYPE = I. Unit: Identifier.'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    primaryKey: true
+    primaryKeyPosition: 1
+    required: true
+    semanticType: dimension
+    quality:
+    - id: intersection_hotspots_with_streets_Intersection_Key_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Intersection_Key must always be populated.
+  - id: intersection_hotspots_with_streets_Crash_Year
+    name: Crash_Year
+    logicalType: integer
+    physicalType: int64
+    description: 'Calendar year of Crash_Date. Unit: Year.'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    primaryKey: true
+    primaryKeyPosition: 2
+    required: true
+    semanticType: dimension
+    quality:
+    - id: intersection_hotspots_with_streets_Crash_Year_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Crash_Year must always be populated.
+  - id: intersection_hotspots_with_streets_Crash_Count
+    name: Crash_Count
+    logicalType: integer
+    physicalType: int64
+    description: 'Distinct collisions (INCKEY) in the location-year group. Unit: Collisions (count).'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    required: true
+    semanticType: measure
+    quality:
+    - id: intersection_hotspots_with_streets_Crash_Count_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Crash_Count must always be populated.
+    - id: intersection_hotspots_with_streets_Crash_Count_positive
+      type: sql
+      dimension: conformity
+      severity: error
+      description: Crash_Count is a positive integer.
+      query: SELECT COUNT(*) FROM intersection_hotspots_with_streets WHERE Crash_Count < 1
+      mustBe: 0
+  - id: intersection_hotspots_with_streets_Total_Injuries
+    name: Total_Injuries
+    logicalType: integer
+    physicalType: int64
+    description: 'Sum of INJURIES in the group. Unit: People (count).'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    required: true
+    semanticType: measure
+    quality:
+    - id: intersection_hotspots_with_streets_Total_Injuries_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Total_Injuries must always be populated.
+  - id: intersection_hotspots_with_streets_Total_Serious_Injuries
+    name: Total_Serious_Injuries
+    logicalType: integer
+    physicalType: int64
+    description: 'Sum of SERIOUSINJURIES in the group. Unit: People (count).'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    required: true
+    semanticType: measure
+    quality:
+    - id: intersection_hotspots_with_streets_Total_Serious_Injuries_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Total_Serious_Injuries must always be populated.
+  - id: intersection_hotspots_with_streets_Total_Fatalities
+    name: Total_Fatalities
+    logicalType: integer
+    physicalType: int64
+    description: 'Sum of FATALITIES in the group. Unit: People (count).'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    required: true
+    semanticType: measure
+    quality:
+    - id: intersection_hotspots_with_streets_Total_Fatalities_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Total_Fatalities must always be populated.
+  - id: intersection_hotspots_with_streets_Connected_Segment_Count
+    name: Connected_Segment_Count
+    logicalType: integer
+    physicalType: float64
+    description: 'Distinct street segments with an endpoint at the intersection. Unit: Segments (count).'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    semanticType: measure
+  - id: intersection_hotspots_with_streets_Connected_Street_Name_Count
+    name: Connected_Street_Name_Count
+    logicalType: integer
+    physicalType: float64
+    description: 'Distinct street names meeting at the intersection. Unit: Streets (count).'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    semanticType: measure
+  - id: intersection_hotspots_with_streets_Min_Speed_Limit
+    name: Min_Speed_Limit
+    logicalType: integer
+    physicalType: float64
+    description: 'Lowest posted speed limit among connected segments. Unit: Miles per hour.'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+  - id: intersection_hotspots_with_streets_Max_Speed_Limit
+    name: Max_Speed_Limit
+    logicalType: integer
+    physicalType: float64
+    description: 'Highest posted speed limit among connected segments. Unit: Miles per hour.'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+  - id: intersection_hotspots_with_streets_Distinct_Speed_Limits
+    name: Distinct_Speed_Limits
+    logicalType: integer
+    physicalType: float64
+    description: 'Number of different posted speed limits at the intersection. Unit: Count.'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    semanticType: measure
+  - id: intersection_hotspots_with_streets_Zero_Speed_Limit_Endpoints
+    name: Zero_Speed_Limit_Endpoints
+    logicalType: number
+    physicalType: float64
+    description: 'Connected endpoints with a speed limit of 0. Unit: Endpoints (count).'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    semanticType: measure
+  - id: intersection_hotspots_with_streets_Missing_Speed_Limit_Endpoints
+    name: Missing_Speed_Limit_Endpoints
+    logicalType: number
+    physicalType: float64
+    description: 'Connected endpoints with no speed limit. Unit: Endpoints (count).'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    semanticType: measure
+  - id: intersection_hotspots_with_streets_Speed_Limit_Status
+    name: Speed_Limit_Status
+    logicalType: string
+    physicalType: object
+    description: 'Same Recorded Speed Limit / Different Speed Limits / Contains Zero Speed Limit - Review / No Speed Limit
+      Available. Unit: Category.'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    semanticType: dimension
+    examples:
+    - Contains Zero Speed Limit — Review
+    - Different Speed Limits
+    - Same Recorded Speed Limit
+  - id: intersection_hotspots_with_streets_Intersection_Street_Status
+    name: Intersection_Street_Status
+    logicalType: string
+    physicalType: object
+    description: 'Street Reference Available / No Matching Street Reference. Unit: Category.'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    required: true
+    semanticType: dimension
+    examples:
+    - No Matching Street Reference
+    - Street Reference Available
+    quality:
+    - id: intersection_hotspots_with_streets_Intersection_Street_Status_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Intersection_Street_Status must always be populated.
+  quality:
+  - id: intersection_hotspots_with_streets_rowcount
+    type: library
+    metric: rowCount
+    mustBe: 10968
+    dimension: completeness
+    severity: error
+    description: Row count for the archived snapshot downloaded 2026-11-02 (10,968 rows).
+  - id: intersection_hotspots_with_streets_grain_unique
+    type: library
+    metric: duplicateValues
+    mustBe: 0
+    arguments:
+      properties:
+      - Intersection_Key
+      - Crash_Year
+    dimension: uniqueness
+    severity: error
+    description: The grain (Intersection_Key, Crash_Year) is unique. Pipeline STOP rule.
+  - id: intersection_hotspots_with_streets_conservation
+    type: sql
+    dimension: consistency
+    severity: error
+    description: 'Crash conservation: SUM(Crash_Count) equals 17,751 source crashes in scope. Pipeline STOP rule.'
+    query: SELECT SUM(Crash_Count) FROM intersection_hotspots_with_streets
+    mustBe: 17751
+- id: crash_scope_summary
+  name: crash_scope_summary
+  physicalName: crash_scope_summary.csv
+  logicalType: object
+  physicalType: csv file
+  description: Number of source collisions in each analysis-scope category; reconciles to all source collisions.
+  dataGranularityDescription: One row per analysis-scope category.
+  properties:
+  - id: crash_scope_summary_Road_Analysis_Status
+    name: Road_Analysis_Status
+    logicalType: string
+    physicalType: object
+    description: 'Analysis scope: Included - Road Segment, Included - Intersection, Outside - Unmatched Location, Outside
+      - Alley. Unit: Category.'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    primaryKey: true
+    primaryKeyPosition: 1
+    required: true
+    unique: true
+    semanticType: dimension
+    examples:
+    - Included - Intersection
+    - Included - Road Segment
+    - Outside - Alley
+    - Outside - Unmatched Location
+    quality:
+    - id: crash_scope_summary_Road_Analysis_Status_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Road_Analysis_Status must always be populated.
+  - id: crash_scope_summary_Number_of_Crashes
+    name: Number_of_Crashes
+    logicalType: integer
+    physicalType: int64
+    description: 'Distinct collisions in the scope category. Unit: Collisions (count).'
+    customProperties:
+    - property: definitionSource
+      value: pipeline.py
+    required: true
+    semanticType: measure
+    quality:
+    - id: crash_scope_summary_Number_of_Crashes_nulls
+      type: library
+      metric: nullValues
+      mustBe: 0
+      dimension: completeness
+      severity: error
+      description: Number_of_Crashes must always be populated.
+    - id: crash_scope_summary_Number_of_Crashes_positive
+      type: sql
+      dimension: conformity
+      severity: error
+      description: Number_of_Crashes is a positive integer.
+      query: SELECT COUNT(*) FROM crash_scope_summary WHERE Number_of_Crashes < 1
+      mustBe: 0
+  quality:
+  - id: crash_scope_summary_rowcount
+    type: library
+    metric: rowCount
+    mustBe: 4
+    dimension: completeness
+    severity: error
+    description: Row count for the archived snapshot downloaded 2026-11-02 (4 rows).
+  - id: crash_scope_summary_grain_unique
+    type: library
+    metric: duplicateValues
+    mustBe: 0
+    arguments:
+      properties:
+      - Road_Analysis_Status
+    dimension: uniqueness
+    severity: error
+    description: The grain (Road_Analysis_Status) is unique. Pipeline STOP rule.
+  - id: crash_scope_summary_conservation
+    type: sql
+    dimension: consistency
+    severity: error
+    description: 'Crash conservation: SUM(Number_of_Crashes) equals 53,936 source crashes in scope. Pipeline STOP rule.'
+    query: SELECT SUM(Number_of_Crashes) FROM crash_scope_summary
+    mustBe: 53936
+team:
+  name: SRH University Data Management, Group 1
+  description: Student group responsible for the derived data product.
+  members:
+  - username: ram.dileep
+    name: Nagothi Ram Dileep
+    role: Derived data owner
+    description: Approves scope, release conditions, limitations and version.
+    dateIn: '2026-11-02'
+  - username: bhavya.sri
+    name: Jonnala Bhavya Sri
+    role: Data steward
+    description: Data dictionary, quality definitions, scope decisions and issue log.
+    dateIn: '2026-11-02'
+  - username: aashrith.reddy
+    name: Pulakanti Aashrith Reddy
+    role: Pipeline custodian
+    description: Unchanged raw copies, Python and Tableau code, tests, hashes and reruns.
+    dateIn: '2026-11-02'
+  - username: megha.vardhan
+    name: Nukala Megha Sri Sai Vardhan
+    role: Quality reviewer
+    description: Independent Tableau/Python comparison, limitations and presentation checks.
+    dateIn: '2026-11-02'
+roles:
+- role: examiner_read
+  access: read
+  description: 'Course examiner: read access to all outputs and evidence.'
+- role: analyst_read
+  access: read
+  description: 'Intended consumers: read curated outputs within the documented limitations.'
+- role: pipeline_write
+  access: write
+  description: Only the pipeline custodian regenerates outputs, via pipeline.py.
+  firstLevelApprovers: Pipeline custodian
+  secondLevelApprovers: Derived data owner
+slaProperties:
+- property: frequency
+  value: manual
+  description: Manual snapshot refresh; no scheduled updates.
+- property: retention
+  value: project duration
+  description: Kept for the course project; raw snapshots retained unchanged with SHA-256 hashes.
+authoritativeDefinitions:
+- type: source
+  url: https://data-seattlecitygis.opendata.arcgis.com/datasets/SeattleCityGIS::sdot-collisions-all-years
+  description: SDOT Collisions All Years (no licence displayed)
+- type: source
+  url: https://data.seattle.gov/dataset/Seattle-Streets/w3hh-bqt5
+  description: Seattle Streets (no licence; no-warranty disclaimer)
+- type: source
+  url: https://data.seattle.gov/Transportation/Traffic-Counts-by-Study/xucb-vzhc
+  description: Traffic Counts by Study (Public Domain)
+customProperties:
+- property: sourceOwner
+  value: City of Seattle / Seattle Department of Transportation
+- property: snapshotPeriod
+  value: 2019-01-01/2025-12-31
+- property: snapshotDownloaded
+  value: '2026-11-02'
+- property: inputSha256
+  value:
+    crashes: 09d404a0f8562c1fc30a198eff9eb7b10f30771a38628305413623c178d9f2b3
+    streets: a1627928ca669a51fbab5f139b7c9503af1815b56e130c03d8cb463d95c2ec59
+    traffic: e7e95191d04d6454755e3732698717566d466dcc8c025b0f0ddc9595021c97ad
+- property: classification
+  value: public open data; source terms apply; no licence assigned to the derived package
+- property: approvalStatus
+  value: approved by Group 1 on 2026-11-07
+  description: 'Approved by the group; derived data owner: Nagothi Ram Dileep.'
+- property: stopRules
+  value:
+  - missing_required_columns
+  - duplicate_or_invalid_primary_keys
+  - negative_or_non_numeric_injury_counts
+  - duplicate_group_grain
+  - crash_count_non_conservation
+  - join_row_count_change
+  description: Enforced in rules.py and pipeline.py; the pipeline stops before writing any output.
+- property: quarantineRules
+  value:
+  - unparseable_crash_dates
+- property: changePolicy
+  value: Schema-breaking changes need a new major version, a full test rerun and group approval; source refreshes are tracked
+    by hash and download date.

@@ -1,0 +1,6 @@
+priority,issue,evidence,decision,proof_or_expected_check
+1,Prevent fan-out joins,Multiple traffic studies can share a street key,Keep crash counts at location-year grain; summarize traffic separately,Compare crash totals before and after every join
+2,Separate analysis scope,"12,411 events are outside selected matched segment/intersection scope",Keep all records with explicit included/excluded reason,"53,936 = 41,525 + 12,411"
+3,Date-match traffic cautiously,Only 4.77% of segment-year groups have eligible study,Flag unavailable study evidence; avoid risk-per-vehicle rankings,Study coverage KPI and null preservation
+4,Treat weather as incomplete,"12,350 missing and 246 Unknown",Retain original values and create weather-status flag,Weather missing rate remains 22.90%
+5,Flag questionable speed,140 zeros and 20 nulls in Streets,Treat zero as unknown for speed-based interpretation; do not overwrite raw CSV,Zero/null speed counts disclosed

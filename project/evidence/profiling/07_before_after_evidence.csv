@@ -1,0 +1,7 @@
+item,before_raw_or_undocumented,after_handling,claim_limit
+Raw crash records,"53,936 raw events","53,936 retained with scope labels",No source rows deleted
+Analysis inclusion,Not classified for this analysis,"41,525 included; 12,411 outside",Scope rather than data loss
+Crash weather,"12,350 missing","12,350 missing, explicitly identified",No invented weather values
+Street speed,140 zero + 20 null,140 zero + 20 null flagged,Do not claim true speed is corrected
+Crash date parse,"0 invalid of 53,936",0 invalid; validation rule present,Synthetic tests prove failure handling
+Traffic coverage,"790 of 16,569 with study",4.77% coverage disclosed,Cannot claim traffic-adjusted citywide risk

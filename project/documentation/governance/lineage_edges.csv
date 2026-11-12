@@ -1,0 +1,11 @@
+from,relation,to,implementation_state
+City of Seattle data portals,publish,Raw source snapshots (downloaded 2026-11-02),documented with SHA-256 hashes
+Raw source snapshots,are profiled by,Quality checks,implemented (audit_evidence.py; Phase 2 profiling)
+Quality checks,feed,Tableau Prep ETL,implemented and rerun 2026-11-07
+Quality checks,feed,Python pipeline,implemented and rerun (byte-identical on Windows and Linux)
+Python pipeline,produces,Curated CSV outputs,implemented (data/output)
+Tableau Prep ETL,produces,Tableau CSV exports,implemented (data/tableau_output)
+Curated CSV outputs,are reconciled with,Tableau CSV exports,"counts, speed flags and lengths match"
+Curated CSV outputs,support,Collision-count hotspot analysis,limited descriptive use
+Crash event,occurs at,Road segment or intersection,conceptual graph only
+Traffic study,measures,Road segment,conceptual graph only

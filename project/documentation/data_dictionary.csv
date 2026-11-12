@@ -1,0 +1,197 @@
+table,field,type,meaning,unit,definition_source
+raw/crashes,INCKEY,int64,A unique key for the incident,Identifier,SDOT Collisions_OD.pdf
+raw/crashes,STATUS,string,Source location-matching status (Matched / Unmatched). Not proof of a match to the Streets snapshot,Category,Observed values in this snapshot
+raw/crashes,ADDRTYPE,string,"Collision address type: B = Block, I = Intersection, A = Alley",Category,SDOT Collisions_OD.pdf; codes Observed values in this snapshot
+raw/crashes,INTKEY,float64,Key of the intersection associated with the collision,Identifier,SDOT Collisions_OD.pdf
+raw/crashes,LOCATION,string,Description of the general location of the collision,Text,SDOT Collisions_OD.pdf
+raw/crashes,PERSONCOUNT,int64,Total number of people involved in the collision,People (count),SDOT Collisions_OD.pdf
+raw/crashes,PEDCOUNT,int64,Number of pedestrians involved (entered by the state),People (count),SDOT Collisions_OD.pdf
+raw/crashes,PEDCYLCOUNT,int64,Number of bicycles involved (entered by the state),Bicycles (count),SDOT Collisions_OD.pdf
+raw/crashes,VEHCOUNT,int64,Number of vehicles involved (entered by the state),Vehicles (count),SDOT Collisions_OD.pdf
+raw/crashes,INJURIES,int64,Number of total injuries (entered by the state),People (count),SDOT Collisions_OD.pdf
+raw/crashes,SERIOUSINJURIES,int64,Number of serious injuries (entered by the state),People (count),SDOT Collisions_OD.pdf
+raw/crashes,FATALITIES,int64,Number of fatalities (entered by the state),People (count),SDOT Collisions_OD.pdf
+raw/crashes,INCDATE,string,Date of the incident,Date,SDOT Collisions_OD.pdf
+raw/crashes,INCDTTM,string,Date and time of the incident (text),Date/time text,SDOT Collisions_OD.pdf
+raw/crashes,JUNCTIONTYPE,string,Category of junction at which the collision took place,Category,SDOT Collisions_OD.pdf
+raw/crashes,SDOT_COLCODE,int64,Code given to the collision by SDOT,Code,SDOT Collisions_OD.pdf
+raw/crashes,SDOT_COLDESC,string,Description of the collision corresponding to SDOT_COLCODE,Text,SDOT Collisions_OD.pdf
+raw/crashes,INATTENTIONIND,string,Whether the collision was due to inattention (Y; blank = not indicated),Flag,SDOT Collisions_OD.pdf
+raw/crashes,UNDERINFL,string,Whether a driver involved was under the influence of drugs or alcohol (Y/N),Flag,SDOT Collisions_OD.pdf
+raw/crashes,WEATHER,string,Weather conditions at the time of the collision,Category,SDOT Collisions_OD.pdf
+raw/crashes,ROADCOND,string,Condition of the road during the collision,Category,SDOT Collisions_OD.pdf
+raw/crashes,LIGHTCOND,string,Light conditions during the collision,Category,SDOT Collisions_OD.pdf
+raw/crashes,PEDROWNOTGRNT,string,Whether pedestrian right of way was not granted (Y; blank = not indicated),Flag,SDOT Collisions_OD.pdf
+raw/crashes,SPEEDING,string,Whether speeding was a factor (Y; blank = not indicated),Flag,SDOT Collisions_OD.pdf
+raw/crashes,SEGLANEKEY,int64,Key for the lane segment in which the collision occurred,Identifier,SDOT Collisions_OD.pdf
+raw/crashes,CROSSWALKKEY,int64,Key for the crosswalk at which the collision occurred,Identifier,SDOT Collisions_OD.pdf
+raw/crashes,HITPARKEDCAR,string,Whether the collision involved hitting a parked car (Y/N),Flag,SDOT Collisions_OD.pdf
+raw/crashes,COLLISIONTYPE,string,Collision type,Category,SDOT Collisions_OD.pdf
+raw/crashes,SEVERITYCODE,float64,"Collision severity code: 1 = Property Damage Only, 2 = Injury, 3 = Serious Injury, 4 = Fatal. The 2018 SDOT document lists an older scheme; codes here are taken from SEVERITYDESC",Code,Observed values in this snapshot
+raw/crashes,ADDR_SEGINTKEY,int64,Segment/intersection key of the collision address; joined to Streets.COMPKEY when ADDRTYPE = B,Identifier,Interpreted from field name; not defined by source; join use from pipeline.py
+raw/crashes,SEVERITYDESC,string,Description of collision severity,Category,SDOT Collisions_OD.pdf
+raw/crashes,x,float64,"Point X coordinate, Washington State Plane North (ArcGIS spatial reference 2926)",US survey feet,ArcGIS layer spatial reference; consistent with value range
+raw/crashes,y,float64,"Point Y coordinate, Washington State Plane North (ArcGIS spatial reference 2926)",US survey feet,ArcGIS layer spatial reference; consistent with value range
+raw/streets,OBJECTID,int64,ESRI unique identifier,Identifier,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,COMPKEY,int64,"Primary key of the Street asset table, assigned by the Hansen asset management system",Identifier,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,UNITID,float64,Not documented by source,Unknown,Not documented by source
+raw/streets,UNITID2,float64,Not documented by source,Unknown,Not documented by source
+raw/streets,UNITIDSORT,float64,Alpha-numeric Hansen unique identifier,Identifier,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,UNITDESC,string,Structured description of the street location,Text,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,STNAME_ORD,string,Street segment name,Text,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,ONSTREET,string,Street name of the segment,Text,Interpreted from field name; not defined by source
+raw/streets,STATUS,string,Current street status (INSVC = in service),Category,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,PRIMARYDISTRICTCD,string,Not documented by source,Unknown,Not documented by source
+raw/streets,SECONDARYDISTRICTCD,string,Not documented by source,Unknown,Not documented by source
+raw/streets,OVERRIDEYN,string,Not documented by source,Unknown,Not documented by source
+raw/streets,XSTRLO,string,Cross street at low end of segment,Text,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,XSTRHI,string,Cross street at high end of segment,Text,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,ARTCLASS,float64,"Arterial classification: 5 Interstate Freeway, 4 State Highway, 3 Collector Arterial, 2 Minor Arterial, 1 Principal Arterial, 0 Not Designated",Code,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,ARTDESCRIPT,string,Arterial class code description,Text,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,OWNER,string,"Organization that owns the street, if not the City",Text,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,BLOCKNBR,float64,Identification number of the block the street runs adjacent to (documented as BLOVKNBR),Identifier,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,SPEEDLIMIT,float64,Posted street speed limit. 0 appears to be a placeholder (140 segments),Miles per hour,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,SEGDIR,string,Street segment direction,Direction code,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,ONEWAY,string,One-way street (Y/N),Flag,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,ONEWAYDIR,string,One-way street traffic flow direction,Direction code,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,FLOW,string,One-way street traffic flow classification,Code,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,SEGLENGTH,float64,Street segment length,Feet,SDOT Seattle_Streets_OD.pdf (2018-07-09); matches Shape__Length (median ratio 1.000)
+raw/streets,SURFACEWIDTH,float64,Street segment width,Feet,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,SURFACETYPE_1,string,"Primary pavement: AC = Asphalt Concrete, PCC = Rigid Pavement, AC/PCC = Composite, ST = Bituminous Surface Treatment",Code,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,SURFACEDATE_1,string,Not documented by source,Unknown,Not documented by source
+raw/streets,SURFACETYPE_2,string,Secondary pavement used on street surface,Code,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,SURFACEDATE_2,string,Not documented by source,Unknown,Not documented by source
+raw/streets,INTRLO,string,Description of the intersection at the low address end of the segment,Text,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,DIRLO,string,Relative direction of low address end of segment,Direction code,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,INTKEYLO,float64,Intersection key at low address end of segment,Identifier,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,INTRHI,string,Description of the intersection at the high address end of the segment,Text,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,DIRHI,string,Direction of high address end of segment,Direction code,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,INTKEYHI,float64,Intersection key at high address end of segment,Identifier,Interpreted from field name; not defined by source (counterpart of documented INTKEYLO)
+raw/streets,GIS_MID_X,float64,Not documented by source,Unknown,Not documented by source
+raw/streets,GIS_MID_Y,float64,Not documented by source,Unknown,Not documented by source
+raw/streets,SE_ANNO_CAD_DATA,string,Not documented by source,Unknown,Not documented by source
+raw/streets,SGNDBKROUTE,string,Not documented by source,Unknown,Not documented by source
+raw/streets,NGHBRHDGRNWY,string,Not documented by source,Unknown,Not documented by source
+raw/streets,NATIONHWYSYS,string,Whether the street is part of the National Highway System (Y/N),Flag,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,STREETTYPE,string,Street type classification (Seattle Right of Way Improvements Manual),Category,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,MJTRK_STR_FLAG,string,Not documented by source,Unknown,Not documented by source
+raw/streets,PVMTCONDINDX1,float64,Primary pavement condition,"Index, out of 100",SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,PVMTCONDINDX2,float64,Secondary pavement condition,"Index, out of 100",SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,TRANCLASS,int64,Street transit classification,Code,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,TRANDESCRIPT,string,Transit class description,Text,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,OVERRIDECOMMENT,float64,Not documented by source,Unknown,Not documented by source
+raw/streets,BLOCK_URL,string,Not documented by source,Unknown,Not documented by source
+raw/streets,SLOPE_PCT,float64,Street grade,Percent slope,SDOT Seattle_Streets_OD.pdf (2018-07-09)
+raw/streets,PVMTCATEGORY,string,Not documented by source,Unknown,Not documented by source
+raw/streets,PARKBOULEVARD,string,Not documented by source,Unknown,Not documented by source
+raw/streets,Shape__Length,float64,GIS-calculated length of the feature,Feet (State Plane),SDOT Seattle_Streets_OD.pdf (2018-07-09) (documented as SHAPE_Length)
+raw/traffic,STUDY_ID,string,Traffic study identifier,Identifier,Interpreted from field name; not defined by source
+raw/traffic,TITLE,string,Study title,Text,Interpreted from field name; not defined by source
+raw/traffic,NON_STANDARD_LOCATION_YN,string,Whether the study is at a non-standard location (Y/N),Flag,Interpreted from field name; not defined by source
+raw/traffic,NSL_ID,string,Not documented by source,Unknown,Not documented by source
+raw/traffic,COMPKEY,string,Street segment key linking the study to a street segment (Seattle Streets COMPKEY),Identifier,data.seattle.gov column description
+raw/traffic,UNITID,float64,Not documented by source,Unknown,Not documented by source
+raw/traffic,UNITID2,float64,Not documented by source,Unknown,Not documented by source
+raw/traffic,START_DATE,string,Study start date,Date,Interpreted from field name; not defined by source
+raw/traffic,END_DATE,string,Study end date,Date,Interpreted from field name; not defined by source
+raw/traffic,ACTUAL_DAYS,float64,Number of days actually counted,Days,Interpreted from field name; not defined by source
+raw/traffic,INTENDED_DAYS,int64,Number of days planned,Days,Interpreted from field name; not defined by source
+raw/traffic,STUDY_LENGTH,int64,Not documented by source,Unknown,Not documented by source
+raw/traffic,LANE_DESIGNATION_CODE_ID,int64,Lane designation code; most studies are 1 (Standard); 7 = Aggregate Element combining two studies,Code,data.seattle.gov column description
+raw/traffic,TRAFFIC_FLOW_DIR_ID,int64,"Traffic flow direction code; 11 = Total, a combination of directional studies summed for the segment",Code,data.seattle.gov column description
+raw/traffic,COMMENTS,string,Not documented by source,Unknown,Not documented by source
+raw/traffic,COUNTER_ID,string,Not documented by source,Unknown,Not documented by source
+raw/traffic,COUNTER_TYPE_ID,string,Not documented by source,Unknown,Not documented by source
+raw/traffic,COUNTER_CHANNEL,string,Not documented by source,Unknown,Not documented by source
+raw/traffic,COUNTER_CONFIGURATION,string,Not documented by source,Unknown,Not documented by source
+raw/traffic,ADT,string,Average daily traffic measured during the study,"Vehicles per day (study period, not annualized)",Interpreted from field name; not defined by source
+raw/traffic,AWDT,string,Average weekday daily traffic during the study,Vehicles per weekday,Interpreted from field name; not defined by source
+raw/traffic,MAX_EIGHT,string,Not documented by source,Unknown,Not documented by source
+raw/traffic,AM_PK,string,Morning peak traffic volume,Vehicles,Interpreted from field name; not defined by source
+raw/traffic,PM_PK,string,Afternoon peak traffic volume,Vehicles,Interpreted from field name; not defined by source
+raw/traffic,STUDY_DAYS,int64,Number of days in the study,Days,Interpreted from field name; not defined by source
+raw/traffic,STUDY_WEEKDAYS,int64,Number of weekdays in the study,Days,Interpreted from field name; not defined by source
+raw/traffic,ADD_DTTM,string,Date/time the record was added,Date/time,Interpreted from field name; not defined by source
+raw/traffic,MOD_DTTM,string,Date/time the record was last modified,Date/time,Interpreted from field name; not defined by source
+raw/traffic,RECORD_TIMESTAMP,string,Not documented by source,Unknown,Not documented by source
+raw/traffic,LOCATION_DESCR,string,Text description of the study location,Text,Interpreted from field name; not defined by source
+raw/traffic,DIR_FROM_CROSS_STREET,string,Not documented by source,Unknown,Not documented by source
+output/validated_crashes.csv,INCKEY,int64,A unique key for the incident,Identifier,Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,STATUS,string,Source location-matching status (Matched / Unmatched). Not proof of a match to the Streets snapshot,Category,Copied from raw/crashes; Observed values in this snapshot
+output/validated_crashes.csv,ADDRTYPE,string,"Collision address type: B = Block, I = Intersection, A = Alley",Category,Copied from raw/crashes; SDOT Collisions_OD.pdf; codes Observed values in this snapshot
+output/validated_crashes.csv,INTKEY,float64,Key of the intersection associated with the collision,Identifier,Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,LOCATION,string,Description of the general location of the collision,Text,Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,PERSONCOUNT,int64,Total number of people involved in the collision,People (count),Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,PEDCOUNT,int64,Number of pedestrians involved (entered by the state),People (count),Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,PEDCYLCOUNT,int64,Number of bicycles involved (entered by the state),Bicycles (count),Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,VEHCOUNT,int64,Number of vehicles involved (entered by the state),Vehicles (count),Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,INJURIES,int64,Number of total injuries (entered by the state),People (count),Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,SERIOUSINJURIES,int64,Number of serious injuries (entered by the state),People (count),Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,FATALITIES,int64,Number of fatalities (entered by the state),People (count),Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,INCDATE,string,Date of the incident,Date,Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,INCDTTM,string,Date and time of the incident (text),Date/time text,Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,JUNCTIONTYPE,string,Category of junction at which the collision took place,Category,Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,SDOT_COLCODE,int64,Code given to the collision by SDOT,Code,Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,SDOT_COLDESC,string,Description of the collision corresponding to SDOT_COLCODE,Text,Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,INATTENTIONIND,string,Whether the collision was due to inattention (Y; blank = not indicated),Flag,Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,UNDERINFL,string,Whether a driver involved was under the influence of drugs or alcohol (Y/N),Flag,Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,WEATHER,string,Weather conditions at the time of the collision,Category,Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,ROADCOND,string,Condition of the road during the collision,Category,Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,LIGHTCOND,string,Light conditions during the collision,Category,Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,PEDROWNOTGRNT,string,Whether pedestrian right of way was not granted (Y; blank = not indicated),Flag,Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,SPEEDING,string,Whether speeding was a factor (Y; blank = not indicated),Flag,Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,SEGLANEKEY,int64,Key for the lane segment in which the collision occurred,Identifier,Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,CROSSWALKKEY,int64,Key for the crosswalk at which the collision occurred,Identifier,Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,HITPARKEDCAR,string,Whether the collision involved hitting a parked car (Y/N),Flag,Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,COLLISIONTYPE,string,Collision type,Category,Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,SEVERITYCODE,float64,"Collision severity code: 1 = Property Damage Only, 2 = Injury, 3 = Serious Injury, 4 = Fatal. The 2018 SDOT document lists an older scheme; codes here are taken from SEVERITYDESC",Code,Copied from raw/crashes; Observed values in this snapshot
+output/validated_crashes.csv,ADDR_SEGINTKEY,int64,Segment/intersection key of the collision address; joined to Streets.COMPKEY when ADDRTYPE = B,Identifier,Copied from raw/crashes; Interpreted from field name; not defined by source; join use from pipeline.py
+output/validated_crashes.csv,SEVERITYDESC,string,Description of collision severity,Category,Copied from raw/crashes; SDOT Collisions_OD.pdf
+output/validated_crashes.csv,x,float64,"Point X coordinate, Washington State Plane North (ArcGIS spatial reference 2926)",US survey feet,Copied from raw/crashes; ArcGIS layer spatial reference; consistent with value range
+output/validated_crashes.csv,y,float64,"Point Y coordinate, Washington State Plane North (ArcGIS spatial reference 2926)",US survey feet,Copied from raw/crashes; ArcGIS layer spatial reference; consistent with value range
+output/validated_crashes.csv,Crash_Date,string,Collision date parsed from INCDATE,Date (YYYY-MM-DD),pipeline.py
+output/validated_crashes.csv,Crash_Year,int64,Calendar year of Crash_Date,Year,pipeline.py
+output/validated_crashes.csv,Crash_Road_Key,int64,Numeric ADDR_SEGINTKEY; segment join key for ADDRTYPE = B,Identifier,pipeline.py
+output/validated_crashes.csv,Intersection_Key,float64,Numeric INTKEY; intersection join key for ADDRTYPE = I,Identifier,pipeline.py
+output/validated_crashes.csv,Weather_Status,string,Recorded / Missing (blank WEATHER) / Reported Unknown (WEATHER = Unknown),Category,pipeline.py
+output/validated_crashes.csv,Road_Analysis_Status,string,"Analysis scope: Included - Road Segment, Included - Intersection, Outside - Unmatched Location, Outside - Alley",Category,pipeline.py
+output/road_safety_by_segment_year.csv,Crash_Road_Key,int64,Numeric ADDR_SEGINTKEY; segment join key for ADDRTYPE = B,Identifier,pipeline.py
+output/road_safety_by_segment_year.csv,Crash_Year,int64,Calendar year of Crash_Date,Year,pipeline.py
+output/road_safety_by_segment_year.csv,Crash_Count,int64,Distinct collisions (INCKEY) in the location-year group,Collisions (count),pipeline.py
+output/road_safety_by_segment_year.csv,Total_Injuries,int64,Sum of INJURIES in the group,People (count),pipeline.py
+output/road_safety_by_segment_year.csv,Total_Serious_Injuries,int64,Sum of SERIOUSINJURIES in the group,People (count),pipeline.py
+output/road_safety_by_segment_year.csv,Total_Fatalities,int64,Sum of FATALITIES in the group,People (count),pipeline.py
+output/road_safety_by_segment_year.csv,Street_Road_Key,float64,Streets COMPKEY matched to the crash segment (blank if no match),Identifier,pipeline.py
+output/road_safety_by_segment_year.csv,ONSTREET,string,Street name of the segment,Text,Copied from raw/streets; Interpreted from field name; not defined by source
+output/road_safety_by_segment_year.csv,SPEEDLIMIT,float64,Posted street speed limit. 0 appears to be a placeholder (140 segments),Miles per hour,Copied from raw/streets; SDOT Seattle_Streets_OD.pdf (2018-07-09)
+output/road_safety_by_segment_year.csv,ARTDESCRIPT,string,Arterial class code description,Text,Copied from raw/streets; SDOT Seattle_Streets_OD.pdf (2018-07-09)
+output/road_safety_by_segment_year.csv,SEGLENGTH,float64,Street segment length,Feet,Copied from raw/streets; SDOT Seattle_Streets_OD.pdf (2018-07-09); matches Shape__Length (median ratio 1.000)
+output/road_safety_by_segment_year.csv,Traffic_Road_Key,float64,Traffic COMPKEY matched to the crash segment and year (blank if none),Identifier,pipeline.py
+output/road_safety_by_segment_year.csv,Study_Year,float64,Start year of the matched eligible traffic studies,Year,pipeline.py
+output/road_safety_by_segment_year.csv,Mean_Study_ADT,float64,"Mean ADT of eligible same-year studies (2019-2025, TRAFFIC_FLOW_DIR_ID = 11, ADT > 0)",Vehicles per day (study period),pipeline.py
+output/road_safety_by_segment_year.csv,Traffic_Study_Count,float64,Number of eligible studies averaged,Studies (count),pipeline.py
+output/road_safety_by_segment_year.csv,Street_Match_Status,string,Street Matched / No Street Match,Category,pipeline.py
+output/road_safety_by_segment_year.csv,Traffic_Coverage_Status,string,Eligible Study Available / No Eligible Same-Year Study,Category,pipeline.py
+output/intersection_crashes_by_year.csv,Intersection_Key,int64,Numeric INTKEY; intersection join key for ADDRTYPE = I,Identifier,pipeline.py
+output/intersection_crashes_by_year.csv,Crash_Year,int64,Calendar year of Crash_Date,Year,pipeline.py
+output/intersection_crashes_by_year.csv,Crash_Count,int64,Distinct collisions (INCKEY) in the location-year group,Collisions (count),pipeline.py
+output/intersection_crashes_by_year.csv,Total_Injuries,int64,Sum of INJURIES in the group,People (count),pipeline.py
+output/intersection_crashes_by_year.csv,Total_Serious_Injuries,int64,Sum of SERIOUSINJURIES in the group,People (count),pipeline.py
+output/intersection_crashes_by_year.csv,Total_Fatalities,int64,Sum of FATALITIES in the group,People (count),pipeline.py
+output/intersection_hotspots_with_streets.csv,Intersection_Key,int64,Numeric INTKEY; intersection join key for ADDRTYPE = I,Identifier,pipeline.py
+output/intersection_hotspots_with_streets.csv,Crash_Year,int64,Calendar year of Crash_Date,Year,pipeline.py
+output/intersection_hotspots_with_streets.csv,Crash_Count,int64,Distinct collisions (INCKEY) in the location-year group,Collisions (count),pipeline.py
+output/intersection_hotspots_with_streets.csv,Total_Injuries,int64,Sum of INJURIES in the group,People (count),pipeline.py
+output/intersection_hotspots_with_streets.csv,Total_Serious_Injuries,int64,Sum of SERIOUSINJURIES in the group,People (count),pipeline.py
+output/intersection_hotspots_with_streets.csv,Total_Fatalities,int64,Sum of FATALITIES in the group,People (count),pipeline.py
+output/intersection_hotspots_with_streets.csv,Connected_Segment_Count,float64,Distinct street segments with an endpoint at the intersection,Segments (count),pipeline.py
+output/intersection_hotspots_with_streets.csv,Connected_Street_Name_Count,float64,Distinct street names meeting at the intersection,Streets (count),pipeline.py
+output/intersection_hotspots_with_streets.csv,Min_Speed_Limit,float64,Lowest posted speed limit among connected segments,Miles per hour,pipeline.py
+output/intersection_hotspots_with_streets.csv,Max_Speed_Limit,float64,Highest posted speed limit among connected segments,Miles per hour,pipeline.py
+output/intersection_hotspots_with_streets.csv,Distinct_Speed_Limits,float64,Number of different posted speed limits at the intersection,Count,pipeline.py
+output/intersection_hotspots_with_streets.csv,Zero_Speed_Limit_Endpoints,float64,Connected endpoints with a speed limit of 0,Endpoints (count),pipeline.py
+output/intersection_hotspots_with_streets.csv,Missing_Speed_Limit_Endpoints,float64,Connected endpoints with no speed limit,Endpoints (count),pipeline.py
+output/intersection_hotspots_with_streets.csv,Speed_Limit_Status,string,Same Recorded Speed Limit / Different Speed Limits / Contains Zero Speed Limit - Review / No Speed Limit Available,Category,pipeline.py
+output/intersection_hotspots_with_streets.csv,Intersection_Street_Status,string,Street Reference Available / No Matching Street Reference,Category,pipeline.py
+output/crash_scope_summary.csv,Road_Analysis_Status,string,"Analysis scope: Included - Road Segment, Included - Intersection, Outside - Unmatched Location, Outside - Alley",Category,pipeline.py
+output/crash_scope_summary.csv,Number_of_Crashes,int64,Distinct collisions in the scope category,Collisions (count),pipeline.py

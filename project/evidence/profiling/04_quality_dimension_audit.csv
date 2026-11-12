@@ -1,0 +1,8 @@
+dimension,rule,pass_n,total_n,flag_n,pass_pct,interpretation
+Completeness,WEATHER populated in crash source,41586.0,53936.0,12350.0,77.1,A missing value is not filled in.
+Uniqueness,No duplicate INCKEY in crashes,53936.0,53936.0,0.0,100.0,The crash key identifies events in this snapshot.
+Validity,Crash dates parse in expected format,53936.0,53936.0,0.0,100.0,Future invalid rows must be quarantined.
+Validity,3 injury measures numeric and >=0,161808.0,161808.0,0.0,100.0,The three injury columns were checked at cell level.
+Consistency,Street speed nonzero and populated,23728.0,23888.0,160.0,99.33,Zero values and null values are retained but flagged.
+Timeliness,Segment-year with same-year study,790.0,16569.0,15779.0,4.77,Study coverage does not establish annual exposure.
+Accuracy,Independent police/field verification,,,,,No independent ground truth in these source files.

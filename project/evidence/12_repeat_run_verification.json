@@ -1,0 +1,7 @@
+{
+  "input_hashes_equal": true,
+  "output_hashes_equal": true,
+  "number_outputs_compared": 5,
+  "repeatable": true,
+  "note": "Run timestamps in logs intentionally differ. Data hashes have identical bytes."
+}

@@ -1,0 +1,15 @@
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Operating-system and Office temporary files
+.DS_Store
+Thumbs.db
+~$*
+
+# Source data redistribution: Collisions and Streets show no licence.
+# If the group decides NOT to publish the raw snapshots publicly, uncomment the next line.
+# Others can re-download them (see README section 3) and verify the SHA-256 hashes.
+# project/data/raw/*.csv

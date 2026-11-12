@@ -1,0 +1,14 @@
+dataset,column,meaning,rows,null_count,null_pct,distinct_nonnull,top_value,top_value_count
+crashes,INCKEY,event identifier,53936,0,0.0,53936,387212,1
+crashes,INCDATE,reported crash date/time,53936,0,0.0,2557,2/4/2019 8:00:00 AM,62
+crashes,WEATHER,recorded weather,53936,12350,22.9,12,Clear,26416
+crashes,ADDRTYPE,address category,53936,0,0.0,3,B,32387
+crashes,STATUS,location-matching status,53936,0,0.0,2,Matched,41721
+crashes,INJURIES,injury count,53936,0,0.0,5,0,38215
+streets,COMPKEY,street segment identifier,23888,0,0.0,23888,1001,1
+streets,SPEEDLIMIT,speed limit value,23888,20,0.08,10,20,16950
+streets,SEGLENGTH,segment length,23888,5,0.02,1611,322,669
+traffic,STUDY_ID,study identifier,64532,0,0.0,64532,"216,246",1
+traffic,COMPKEY,link to street segment,64532,1217,1.89,6699,"22,804",1438
+traffic,START_DATE,study start,64532,0,0.0,24037,2023 Oct 01 12:00:00 AM,74
+traffic,ADT,average daily traffic value,64532,0,0.0,54583,0,2738

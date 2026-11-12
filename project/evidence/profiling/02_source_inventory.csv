@@ -1,0 +1,4 @@
+source,file,rows,fields,key,null_keys,duplicate_keys,source_sha256
+crashes,CRASHES_2019_2025.csv,53936,33,INCKEY,0,0,09d404a0f8562c1fc30a198eff9eb7b10f30771a38628305413623c178d9f2b3
+streets,Seattle_Streets_1_7907262242317696645.csv,23888,53,COMPKEY,0,0,a1627928ca669a51fbab5f139b7c9503af1815b56e130c03d8cb463d95c2ec59
+traffic,Traffic_Counts_by_Study_20261101.csv,64532,31,STUDY_ID,0,0,e7e95191d04d6454755e3732698717566d466dcc8c025b0f0ddc9595021c97ad

@@ -1,0 +1,33 @@
+{
+  "distinct_street_endpoint_intersections": 15504,
+  "eligible_traffic_studies": 4730,
+  "eligible_traffic_year_groups": 3037,
+  "endpoint_rows": 47706,
+  "input_sha256": {
+    "crashes": "09d404a0f8562c1fc30a198eff9eb7b10f30771a38628305413623c178d9f2b3",
+    "streets": "a1627928ca669a51fbab5f139b7c9503af1815b56e130c03d8cb463d95c2ec59",
+    "traffic": "e7e95191d04d6454755e3732698717566d466dcc8c025b0f0ddc9595021c97ad"
+  },
+  "intersection_crashes": 17751,
+  "intersection_join_crash_total": 17751,
+  "intersection_year_groups": 10968,
+  "intersection_year_groups_without_street_match": 25,
+  "missing_weather_records": 12350,
+  "output_sha256": {
+    "crash_scope_summary.csv": "643f867253e9d17caefc6750a868022f0ec5a5129d84502ff3bf6f265b04bfae",
+    "intersection_crashes_by_year.csv": "70a8e29ec88cd72a853f98d5b778701dcd891cfbc3e9593a3a1de20773fdc2b8",
+    "intersection_hotspots_with_streets.csv": "8dd27cc7411b13e01e78736c528ec47a11902f7dd018266b4309ee155b7b9d5c",
+    "road_safety_by_segment_year.csv": "6894adc9fcf89ea46e06814a9a6e9381673bbf6414cd96a00710f03a154fb008",
+    "validated_crashes.csv": "4e29c1a11cac9bf98cabe14ffa8beb54533195043a74d321b5b027f0f312db24"
+  },
+  "quarantined_unparseable_date_crashes": 0,
+  "raw_crashes": 53936,
+  "raw_streets": 23888,
+  "raw_traffic_studies": 64532,
+  "segment_crashes": 23774,
+  "segment_join_crash_total": 23774,
+  "segment_year_groups": 16569,
+  "segment_year_groups_with_same_year_traffic": 790,
+  "segment_year_groups_without_street_match": 41,
+  "zero_street_speed_limit_values": 140
+}

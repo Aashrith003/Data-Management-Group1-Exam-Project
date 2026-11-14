@@ -52,7 +52,7 @@ One surprise: SDOT's document lists older severity codes. In our data the codes 
 ## What we did
 
 1. Checked that all IDs are present and unique, and read the dates.
-2. Gave every collision a status: road segment, intersection, unmatched location or alley. Nothing was deleted.
+2. Gave every collision a status: road segment, intersection, unmatched location or alley. A collision whose date cannot be read is marked as quarantined. Nothing was deleted.
 3. Counted collisions per road segment and year, and per intersection and year.
 4. Added street details and, where available, traffic counts from the same year. Traffic studies and street ends were summarised first, so no collision is counted twice.
 5. Flagged problems such as missing weather or a speed limit of 0 instead of hiding or guessing them.
@@ -70,7 +70,7 @@ We did this twice: once in Tableau Prep (`../tableau/Seattle_Road_Safety_Final.t
 | `crash_scope_summary.csv` | How many collisions are in each status |
 | `quality_metrics.json` | Key numbers and fingerprints of all inputs and outputs |
 
-The CSV outputs are not stored on GitHub because `pipeline.py` recreates them exactly. The Tableau versions of the first four files are in `data/tableau_output/`.
+The CSV outputs are included here, and `pipeline.py` recreates them exactly; you can compare your files with the checksums in `quality_metrics.json`. The Tableau versions of the first four files are in `data/tableau_output/`.
 
 41,525 of the 53,936 collisions (77%) could be placed on a segment or intersection. The other 12,411 (12,215 unmatched locations and 196 alleys) stay in `validated_crashes.csv` with their status. No collision had an unreadable date, so the quarantine file in `data/quarantine/` is empty.
 
@@ -84,6 +84,7 @@ py -3 -m venv .venv
 python -m pip install -r requirements.txt
 python -m unittest discover -s tests -v
 python pipeline.py
+python profile.py
 python audit_evidence.py
 python pipeline.py
 ```

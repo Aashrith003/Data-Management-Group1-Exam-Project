@@ -4,7 +4,9 @@ SRH University · Data Management · Group 1
 
 This is our data management exam project. We took three public datasets from the City of Seattle (collisions, streets and traffic counts) and turned them into clean tables that show **how many collisions were recorded on each road segment and at each intersection from 2019 to 2025**.
 
-We did the cleaning twice: once in **Tableau Prep** and once in **Python**. Both give the same results. When we found a problem in the data, we did not hide it or guess a value. We kept it visible and marked it.
+We implemented the main transformations independently in **Tableau Prep** and **Python**. Both versions agree on the recorded collision counts across all 16,569 road-year groups and 10,968 intersection-year groups. We also checked the intersection speed-limit classifications and street-segment lengths after correcting differences found during development.
+
+The exported files are not identical in layout: Tableau retains additional source fields, while Python produces a smaller curated schema. Missing or questionable values remain visible rather than being guessed or silently replaced.
 
 > **Our question:** Which Seattle road segments and intersections had the most recorded collisions in 2019–2025, and what problems in the data do people need to know about before they use these numbers?
 >
@@ -48,9 +50,9 @@ Click a name to open it, or click the link on the right to read what it does.
 | [`project/profile.py`](project/profile.py) | Describes every column of the raw files | [05 Python – profile.py](project/documentation/05_PYTHON_REPRODUCIBILITY.md#4-profilepy) |
 | [`project/audit_evidence.py`](project/audit_evidence.py) | Checks the results again and writes the evidence files | [05 Python – audit_evidence.py](project/documentation/05_PYTHON_REPRODUCIBILITY.md#5-audit_evidencepy) |
 | [`project/tests/`](project/tests/) | 10 automated tests | [05 Python – the tests](project/documentation/05_PYTHON_REPRODUCIBILITY.md#7-the-tests) |
-| [`project/scripts/`](project/scripts/) | Tools that create and check the data contract | [06 Governance – data contract](project/documentation/06_GOVERNANCE_AND_AI.md#data-contract) |
+| [`project/scripts/`](project/scripts/) | Tools for the data contract and the detailed profile | [06 Governance – data contract](project/documentation/06_GOVERNANCE_AND_AI.md#data-contract) |
 | [`project/data/raw/`](project/data/raw/) | The three original files, never changed | [project README – raw data](project/README.md#the-raw-data-dataraw) |
-| [`project/data/output/`](project/data/output/) | `quality_metrics.json` with all checksums. The output CSVs are made by running `pipeline.py`. | [project README – outputs](project/README.md#the-outputs-dataoutput) |
+| [`project/data/output/`](project/data/output/) | The five Python output CSVs and `quality_metrics.json` with all checksums. `pipeline.py` recreates them exactly. | [project README – outputs](project/README.md#the-outputs-dataoutput) |
 | [`project/data/tableau_output/`](project/data/tableau_output/) | The four files Tableau produced, used for the comparison | [04 Cleaning and Tableau](project/documentation/04_CLEANING_AND_TABLEAU.md#verified-comparison-tableau-run-of-7-november-2026) |
 | [`project/evidence/`](project/evidence/) | Quality checks, the Tableau-vs-Python comparison and proof that runs repeat exactly | [05 Python – evidence files](project/documentation/05_PYTHON_REPRODUCIBILITY.md#5-audit_evidencepy) |
 | [`project/documentation/`](project/documentation/) | One detailed write-up for each part of the project | see the links in each section below |
@@ -184,13 +186,20 @@ py -3 -m venv .venv
 python -m pip install -r requirements.txt
 python -m unittest discover -s tests -v      # all 10 tests should pass
 python pipeline.py                           # creates data/output
+python profile.py                            # describes every raw column
 python audit_evidence.py                     # creates the evidence files
 python pipeline.py                           # run again: the checksums do not change
 ```
 
-Run `pipeline.py` first, because it creates the output files the other steps need. Every run gives exactly the same files, on Windows and on Linux. You can check this with the `output_sha256` values in [`quality_metrics.json`](project/data/output/quality_metrics.json). The raw files are never changed.
+Run `pipeline.py` first, because it creates the output files the other steps need. We verified repeatability by running the pipeline again on the unchanged source files and comparing the SHA-256 hashes of all five generated outputs. The hashes also matched the reference values stored in [`quality_metrics.json`](project/data/output/quality_metrics.json). Reproducibility on other systems depends on using compatible Python and pandas versions, so the environment and dependencies are documented. The raw files are never changed.
 
 To open the Tableau flow, open [`tableau/Seattle_Road_Safety_Final.tflx`](tableau/Seattle_Road_Safety_Final.tflx) in Tableau Prep Builder. It already contains the three source files.
+
+**Tableau Prep output paths:** The packaged `.tflx` contains all three original source CSVs, so the inputs are self-contained. However, Tableau saves the four CSV output destinations as absolute file paths from the computer where the flow was created.
+
+Before running the flow on another computer, open `O1_Road_Safety_Output`, `O2_Validated_Crashes`, `O4_Intersection_Hotspots` and `O5_Intersection_Streets_Output`. Change each output destination to the local [`project/data/tableau_output/`](project/data/tableau_output/) folder and save the flow.
+
+After running Tableau, run `python audit_evidence.py` from the `project` directory (after `python pipeline.py`) to regenerate the Tableau-versus-Python comparison.
 
 What each file does and what you should see when you run it: [05 Python – how to run it](project/documentation/05_PYTHON_REPRODUCIBILITY.md#6-how-to-run-it) and [05 Python – can the results be reproduced?](project/documentation/05_PYTHON_REPRODUCIBILITY.md#8-can-the-results-be-reproduced).
 

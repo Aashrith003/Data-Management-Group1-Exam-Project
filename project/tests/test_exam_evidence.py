@@ -34,6 +34,9 @@ class ExamEvidenceTests(unittest.TestCase):
         })
         allc,blocks,inters,quarantine=classify_crashes(clean_crashes(raw))
         self.assertEqual(len(quarantine),1)
+        self.assertEqual(
+            (allc.Road_Analysis_Status == 'Quarantined - Invalid Date').sum(),
+            1)
         self.assertEqual(len(blocks),1)
         self.assertEqual(len(inters),0)
         self.assertEqual((allc.Road_Analysis_Status=='Outside - Unmatched Location').sum(),1)

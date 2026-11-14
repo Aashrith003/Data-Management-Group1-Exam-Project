@@ -17,6 +17,7 @@ The work is split into small files with one job each:
 | `tests/` | Ten automated tests for the quality rules and the cleaning steps |
 | `scripts/build_data_contract.py` | Creates the data contract from the outputs and the data dictionary |
 | `scripts/validate_data_contract.py` | Checks the data contract and runs its 49 quality checks |
+| `scripts/generate_detailed_profile.py` | Recreates the 10 detailed profiling files in `evidence/profiling/` |
 
 The order is always the same: run `pipeline.py` first, because the other files work with its outputs.
 
@@ -44,8 +45,9 @@ This is the main program. It runs in seven steps: load, clean, validate, classif
 - `Included - Intersection`: SDOT matched the location, it is an intersection (`ADDRTYPE = I`) and it has a valid intersection key.
 - `Outside - Unmatched Location`: SDOT could not match the location.
 - `Outside - Alley`: the collision happened in an alley.
+- `Quarantined - Invalid Date`: the date cannot be read, so the collision cannot be given a year. This status wins over all the others.
 
-Collisions outside the analysis are kept in the output with their reason. They are not errors and are not deleted. Only a collision whose date cannot be read is set aside in the quarantine file, because it cannot be given a year. In our snapshot there are no such rows.
+Collisions outside the analysis are kept in the output with their reason. They are not errors and are not deleted. Only a collision whose date cannot be read is set aside: it gets the status `Quarantined - Invalid Date`, is copied to the quarantine file and is left out of the yearly counts. In our snapshot there are no such rows.
 
 **Counting collisions (`aggregate_crashes`).** Groups the included collisions by location and year and counts them (`Crash_Count`), together with the total injuries, serious injuries and fatalities. This is done once for road segments and once for intersections.
 
@@ -109,7 +111,9 @@ This script checks the outputs independently of the pipeline and writes the evid
 
 Three more files come from the repeat-run check described in section 7: `11_before_repeat_quality_metrics.json` (the metrics of the first run), `12_repeat_run_verification.json` (the comparison of both runs) and `12_second_run_console.txt` (the screen output of the second run).
 
-The `evidence/profiling/` folder holds a more detailed profile made during the quality phase: all column profiles, value distributions, relationship checks and date ranges. It was produced by a separate profiling script that is kept in the group's working folder.
+The `evidence/profiling/` folder holds the more detailed profile from the quality phase: all column profiles, the source inventory, quality numbers, relationship checks, before/after notes, the ranked cleaning plan, value distributions and date ranges. They are recreated by `scripts/generate_detailed_profile.py`, which reads the raw files and `data/output/road_safety_by_segment_year.csv`, so run it after `pipeline.py`.
+
+Two things to know about this script. Files 07 and 08 contain a few sentences whose numbers were written into the script for this snapshot (for example "53,936 raw events"); all other values are calculated. When two values are equally common, the "most common value" columns show the one that appears first in the file. Because of this fixed rule, one value in `01_full_column_profile.csv` (for `Shape__Length`, where two values each appear twice) differs from the very first version we made during the quality phase; both values are equally correct.
 
 ## 6. How to run it
 
@@ -121,7 +125,9 @@ py -3 -m venv .venv
 python -m pip install -r requirements.txt
 python -m unittest discover -s tests -v
 python pipeline.py
+python profile.py
 python audit_evidence.py
+python scripts/generate_detailed_profile.py
 python pipeline.py
 ```
 
@@ -153,7 +159,7 @@ It should print `Schema validation: PASS` and `49/49 passed`. Use `python script
 | `test_wrong_crash_total_causes_stop` | Counts that do not add up stop the run |
 | `test_conserved_crash_total_passes` | Counts that add up are accepted |
 | `test_duplicated_output_groups_stop` | The same location-year appearing twice stops the run |
-| `test_invalid_date_quarantined_but_unmatched_is_scope_excluded` | A collision with an unreadable date goes to quarantine, while an unmatched one stays in the data with its status |
+| `test_invalid_date_quarantined_but_unmatched_is_scope_excluded` | A collision with an unreadable date goes to quarantine and gets the status `Quarantined - Invalid Date`, while an unmatched one stays in the data with its own status |
 | `test_street_join_preserves_group_row_count` | Adding street and traffic details does not change the number of rows |
 
 The tests use small, made-up tables, so they run in under a second and do not need the real data.
@@ -169,7 +175,7 @@ Yes. We checked this in three ways:
 ## 9. What the code stops, sets aside or keeps
 
 - **Stops the run:** a missing column, a missing or repeated ID, an unreadable or negative injury count, a location-year listed twice, a join that changes the number of rows, or counts that do not add up. In any of these cases no new outputs are written.
-- **Sets aside (quarantine):** collisions whose date cannot be read. There are none in this snapshot; a test shows that it works.
+- **Sets aside (quarantine):** collisions whose date cannot be read. They get the status `Quarantined - Invalid Date` and go to the quarantine file. There are none in this snapshot; a test shows that it works.
 - **Keeps with a label:** unmatched locations and alleys. They are real collisions, so they stay in `validated_crashes.csv` with their reason.
 
 ## 10. Limits

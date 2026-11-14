@@ -34,7 +34,7 @@ All figures are produced from the archived input and `python audit_evidence.py`.
 | Intersection inclusion | 4,602 distinct intersection keys; 16 absent from every Streets endpoint | Same snapshot effect on the intersection side |
 | Functional dependency | `INTKEY` → `LOCATION`: 0 violations across 5,063 keys | Intersection keys are consistent within this snapshot |
 
-Extended profile files (full column profile, domain distributions, temporal profile, relationship checks) are in `evidence/profiling/`. The intersection-inclusion and `INTKEY` → `LOCATION` figures were recomputed for this document and are not yet written to an evidence file.
+Extended profile files (full column profile, domain distributions, temporal profile, relationship checks) are in `evidence/profiling/` and can be recreated with `python scripts/generate_detailed_profile.py`. The intersection-inclusion and `INTKEY` → `LOCATION` figures were recomputed for this document and are not yet written to an evidence file.
 
 ### Before → after - explain, do not embellish
 

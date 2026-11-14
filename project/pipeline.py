@@ -103,11 +103,13 @@ def classify_crashes(c):
     status.loc[matched & df['ADDRTYPE'].eq('I').fillna(False)]='Outside - Bad Intersection Key'
     b=matched & df['ADDRTYPE'].eq('B').fillna(False) & df['Crash_Road_Key'].gt(0).fillna(False)
     i=matched & df['ADDRTYPE'].eq('I').fillna(False) & df['Intersection_Key'].gt(0).fillna(False)
-    status.loc[b]='Included - Road Segment'; status.loc[i]='Included - Intersection'
-    df['Road_Analysis_Status']=status
-    # These are individuals that cannot be analyzed even with a known location key.
-    bad_date=df['Crash_Date'].isna()
-    quarantine=df[bad_date].copy()
+    status.loc[b]='Included - Road Segment'
+    status.loc[i]='Included - Intersection'
+    # An unreadable date cannot be assigned to a year-based analysis.
+    bad_date = df['Crash_Date'].isna()
+    status.loc[bad_date] = 'Quarantined - Invalid Date'
+    df['Road_Analysis_Status'] = status
+    quarantine = df[bad_date].copy()
     quarantine['reason']='unparseable crash date'
     clean=df[~bad_date].copy()
     blocks=clean[clean['Road_Analysis_Status'].eq('Included - Road Segment')].copy()

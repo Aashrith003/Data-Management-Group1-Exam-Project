@@ -84,7 +84,7 @@ streets,BLOCK_URL,23888,5,0.02,23883,http://wdcsqlpwrk03/ReportServer/Pages/Repo
 streets,SLOPE_PCT,23888,154,0.64,34,1,4281,string (to preserve original source values)
 streets,PVMTCATEGORY,23888,5,0.02,8,NON-ART,16718,string (to preserve original source values)
 streets,PARKBOULEVARD,23888,5,0.02,2,N,23693,string (to preserve original source values)
-streets,Shape__Length,23888,0,0.0,23878,661.578251067334,2,string (to preserve original source values)
+streets,Shape__Length,23888,0,0.0,23878,331.561297438224,2,string (to preserve original source values)
 traffic,STUDY_ID,64532,0,0.0,64532,"216,246",1,string (to preserve original source values)
 traffic,TITLE,64532,0,0.0,63719,Aggregate Data,14,string (to preserve original source values)
 traffic,NON_STANDARD_LOCATION_YN,64532,0,0.0,2,N,63315,string (to preserve original source values)

@@ -24,12 +24,12 @@ This is a **separate assessment object**: the downloaded CSV bundle plus our doc
 | Principle | Before | After | What changed and what did not |
 | --- | ---: | ---: | --- |
 | Findable | 0 | 1 | Added a title, keywords and structured metadata. No DOI or catalog registration. |
-| Accessible | 1 | 1 | Source URLs documented; the project bundle itself has no durable public URL. |
+| Accessible | 1 | 1 | Source URLs documented. Since 12 November 2026 the project is in a public GitHub repository, but that is not a persistent identifier or archive. We therefore kept this score at 1. |
 | Interoperable | 1 | 2 | Added `documentation/data_dictionary.csv` (196 raw and output fields, each with its definition source), units from SDOT field documentation, join keys and date-handling notes. 29 raw fields remain undocumented by the sources and are marked as such. |
 | Reusable | 1 | 1 | Added provenance, README, code and cleaning logs. No licence has been established for the combined derived package. |
 | **Total** | **3/8** | **5/8** | Only documented improvements are scored. |
 
-We added/updated an architecture README, a structured Schema.org `metadata.json`, data inventory, data dictionary, checksums, cleaning/quality logs, reproducibility code and data contract. These **improve technical reuse**, but **do not create a DOI, a public GitHub release, a public download route, or legal permission beyond the sources' terms**. Scores should not be upgraded just because local documents exist.
+We added/updated an architecture README, a structured Schema.org `metadata.json`, data inventory, data dictionary, checksums, cleaning/quality logs, reproducibility code and data contract. These **improve technical reuse**. Since 12 November 2026 the code, documentation, source snapshots, Python outputs and Tableau outputs can also be downloaded from our public GitHub repository (https://github.com/Aashrith003/Data-Management-Group1-Exam-Project). This still **does not give a DOI, an archived release or legal permission beyond the sources' terms**, so we did not raise the scores.
 
 ### Source evidence (portal metadata checked 7 November 2026)
 
@@ -50,5 +50,4 @@ Links:
 ### Open items for the group
 
 - Reuse statement for our derived outputs, which must respect the source terms above.
-- Final GitHub repository link.
 - Whether the professor expects one FAIR score per source (6, 6, 7) or the combined score (6/8). Both are documented above.
